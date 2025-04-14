@@ -48,7 +48,7 @@ class Board:
                 action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
                 self.tiles.append(action1)
             else:
-                tile1 = Station("Baza Ulica", 1, self.tile_height, self.tile_width, None, 100, 20, None)
+                tile1 = Street("Baza Ulica", 1, self.tile_height, self.tile_width, (255, 0, 255), 100, 20, None)
                 self.tiles.append(tile1)
 
         for i in range(10):
@@ -56,7 +56,7 @@ class Board:
                 action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
                 self.tiles.append(action1)
             else:
-                tile1 = Station("Baza Ulica", 1, self.tile_width, self.tile_height, None, 100, 20, None)
+                tile1 = Street("Baza Ulica", 1, self.tile_width, self.tile_height, (255, 0, 255), 100, 20, None)
                 self.tiles.append(tile1)
 
         for i in range(10):
@@ -64,7 +64,7 @@ class Board:
                 action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
                 self.tiles.append(action1)
             else:
-                tile1 = Station("Baza Ulica", 1, self.tile_height, self.tile_width, None, 100, 20, None)
+                tile1 = Street("Baza Ulica", 1, self.tile_height, self.tile_width, (255, 0, 255), 100, 20, None)
                 self.tiles.append(tile1)
 
     def draw_one_side(self, screen, x, y, start, stop, rotation):
@@ -75,14 +75,14 @@ class Board:
             if start == 0 or start == 20:
                 if i==0 and start == 0:
                     prev_width = prev_width+1
-                prev_width += tile.width
+                prev_width += tile.width + 1
             elif start == 10 or start == 30:
                 if i==0 and start == 10:
                     prev_height = prev_height+1
-                prev_height += tile.height
+                prev_height += tile.height + 1
 
     def draw(self, screen):
         self.draw_one_side(screen, self.board_left_corner[0], self.board_left_corner[1],0 ,10, 180)
-        self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+9*self.tile_width+1, self.board_left_corner[1], 10, 20, 90)
-        self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+1, self.board_left_corner[1]+self.tile_height+9*self.tile_width+1,20 ,30, 0)
+        self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+9*self.tile_width+1+9, self.board_left_corner[1], 10, 20, 90)
+        self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+1, self.board_left_corner[1]+self.tile_height+9*self.tile_width+1+9,20 ,30, 0)
         self.draw_one_side(screen, self.board_left_corner[0], self.board_left_corner[1] + self.tile_height + 1, 30, 40, -90)

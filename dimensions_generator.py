@@ -1,4 +1,7 @@
 import pygame
+
+S_P = 1
+
 class Dimensions:
    def __init__(self, screen):
        self.calculate_all(screen)
@@ -19,9 +22,9 @@ class Dimensions:
    def calculate_board_size(self, screen):
        # self.get_dimensions()
        if self.screen_width > self.screen_height:
-           self.board_width = 0.8*self.screen_height
+           self.board_width = S_P*self.screen_height
        else:
-           self.board_width = 0.8*self.screen_width
+           self.board_width = S_P*self.screen_width
 
        x_start = (self.screen_width-self.board_width)/2
        y_start = (self.screen_height-self.board_width)/2
