@@ -6,9 +6,9 @@ class Tile:
         self.width = width
         self.height = height
         if self.width<self.height:
-            self.font = 0.104 * self.height
+            self.font = 0.084 * self.height
         else:
-            self.font = 0.104 * self.width
+            self.font = 0.084 * self.width
 
     def draw(self, screen, x, y, rotation):
         if rotation == 0 or rotation == 180:
@@ -30,7 +30,7 @@ class Tile:
         rotated_text_rect.center = (x, y)
         screen.blit(rotated_text, rotated_text_rect)
 
-        if len(parts) == 2:
+        if len(parts) == 2 or len(parts) == 3:
             text2 = font.render(parts[1], True, text_color)
             rotated_text = pygame.transform.rotate(text2, rotation)
             rotated_text_rect = rotated_text.get_rect()
@@ -42,6 +42,21 @@ class Tile:
                 rotated_text_rect.center = (x + self.font, y)
             else:
                 rotated_text_rect.center = (x - self.font, y)
+
+            screen.blit(rotated_text, rotated_text_rect)
+
+        if len(parts) == 3:
+            text3 = font.render(parts[2], True, text_color)
+            rotated_text = pygame.transform.rotate(text3, rotation)
+            rotated_text_rect = rotated_text.get_rect()
+            if rotation == 0:
+                rotated_text_rect.center = (x, y + 2*self.font)
+            elif rotation == 180:
+                rotated_text_rect.center = (x, y - 2*self.font)
+            elif rotation == 90:
+                rotated_text_rect.center = (x + 2*self.font, y)
+            else:
+                rotated_text_rect.center = (x - 2*self.font, y)
 
             screen.blit(rotated_text, rotated_text_rect)
 
@@ -99,13 +114,42 @@ class Station(Tile):
         self.draw_text(screen, x, y, rotation, 0.2, 0.8, str(self.price))
         self.draw_text(screen, x, y, rotation, 0.9, 0.1, self.name)
 
+        image = pygame.image.load(self.image).convert_alpha()
+        rot_image = pygame.transform.rotate(image, rotation)
+        if rotation == 180 or rotation == 0:
+            rot_image = pygame.transform.scale(rot_image, (self.width*0.5, self.width*0.5))
+        else:
+            rot_image = pygame.transform.scale(rot_image, (self.height * 0.5, self.height * 0.5))
+        image_rect = rot_image.get_rect(center=(x + self.width // 2, y + self.height // 2))
+        screen.blit(rot_image, image_rect)
+
+
 class Action(Tile):
     def __init__(self, name, tile_type, width, height, image):
         super().__init__(name, tile_type, width, height)
         self.image = image
-    '''
-    def draw(self, screen, x, y):
-        super().draw(screen, x, y)
-        '''
+
+    def draw(self, screen, x, y, rotation):
+        super().draw(screen, x, y, rotation)
+        if self.name == "START":
+            self.draw_text(screen, x, y, 0, 0.2, 0.2, self.name)
+        elif self.name == "PARKING":
+            self.draw_text(screen, x, y, 180, 0.9, 0.9, self.name)
+        elif self.name == "IDZ DO WIEZIENIA":
+            self.draw_text(screen, x, y, 0, 0.1, 0.1, self.name)
+        else:
+            self.draw_text(screen, x, y, rotation, 0.9, 0.1, self.name)
+
+
+        image = pygame.image.load(self.image).convert_alpha()
+        rot_image = pygame.transform.rotate(image, rotation)
+        if rotation == 180 or rotation == 0:
+            rot_image = pygame.transform.scale(rot_image, (self.width * 0.5, self.width * 0.5))
+        else:
+            rot_image = pygame.transform.scale(rot_image, (self.height * 0.5, self.height * 0.5))
+        image_rect = rot_image.get_rect(center=(x + self.width // 2, y + self.height // 2))
+        screen.blit(rot_image, image_rect)
+
+
 
 

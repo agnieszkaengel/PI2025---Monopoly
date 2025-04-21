@@ -1,6 +1,6 @@
 import pygame
 
-S_P = 1
+S_P = 0.9
 
 class Dimensions:
    def __init__(self, screen):
