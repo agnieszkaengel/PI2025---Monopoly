@@ -1,7 +1,7 @@
 from dimensions_generator import Dimensions
-from tile import Tile, Street, Station, Action
-import pygame
-import json
+from tile import Street, Station, Action
+from dice import Dice
+import json, pygame
 class Board:
     def __init__(self, dim:Dimensions):
         self.board_width = dim.board_width
@@ -10,10 +10,15 @@ class Board:
         self.tile_height = dim.tile_height
         self.tiles = []
         self.create_tiles()
+        self.font_size = dim.font_size
+        self.inner_width = dim.board_width - 2 * dim.tile_height
+        self.inner_left_corner = (dim.board_left_corner[0]+dim.tile_height, dim.board_left_corner[1]+dim.tile_height)
+        self.dice = Dice(self.tile_height, self.tile_width/2, self.font_size)
+
+
 
     def create_tiles(self):
-
-        with open("tiles.txt", "r", encoding="utf-8") as f:
+        with open("tiles.json", "r", encoding="utf-8") as f:
             tile_data = json.load(f)
 
         i = 0
@@ -23,6 +28,7 @@ class Board:
 
             if i==0 or i==10 or i==29 or i==39:
                 image = tile.get("image")
+                image = f"images/{image}" if image else None
                 action = Action(name, tile_type, self.tile_height, self.tile_height, image)
                 self.tiles.append(action)
             else:
@@ -40,6 +46,8 @@ class Board:
                     price = tile.get("price")
                     rent = tile.get("rent")
                     image = tile.get("image")
+                    image = f"images/{image}" if image else None
+
                     if (0 < i < 10) or (19 < i < 29):
                         station = Station(name, tile_type, self.tile_width, self.tile_height, image, price=price, rent=rent, owner=None)
                     else:
@@ -48,6 +56,8 @@ class Board:
 
                 elif tile_type == "Action":
                     image = tile.get("image")
+                    image = f"images/{image}" if image else None
+
                     if (0 < i < 10) or (19 < i < 29):
                         action = Action(name, tile_type, self.tile_width, self.tile_height, image)
                     else:
@@ -55,40 +65,6 @@ class Board:
                     self.tiles.append(action)
             i=i+1
 
-
-        '''
-        for i in range(10):
-            if i==0:
-                action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
-                self.tiles.append(action1)
-            else:
-                tile1 = Station("Baza Ulica", 1, self.tile_width, self.tile_height, None, 100, 20, None)
-                self.tiles.append(tile1)
-
-        for i in range(10):
-            if i == 0:
-                action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
-                self.tiles.append(action1)
-            else:
-                tile1 = Street("Baza Ulica", 1, self.tile_height, self.tile_width, (255, 0, 255), 100, 20, None)
-                self.tiles.append(tile1)
-
-        for i in range(10):
-            if i==9:
-                action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
-                self.tiles.append(action1)
-            else:
-                tile1 = Street("Baza Ulica", 1, self.tile_width, self.tile_height, (255, 0, 255), 100, 20, None)
-                self.tiles.append(tile1)
-
-        for i in range(10):
-            if i == 9:
-                action1 = Action("Wiezienie", 3, self.tile_height, self.tile_height, None)
-                self.tiles.append(action1)
-            else:
-                tile1 = Street("Baza Ulica", 1, self.tile_height, self.tile_width, (255, 0, 255), 100, 20, None)
-                self.tiles.append(tile1)
-'''
     def draw_one_side(self, screen, x, y, start, stop, rotation):
         prev_width = 0
         prev_height = 0

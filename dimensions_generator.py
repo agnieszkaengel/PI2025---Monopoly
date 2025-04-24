@@ -1,6 +1,6 @@
 import pygame
 
-S_P = 0.9
+S_P = 1
 
 class Dimensions:
    def __init__(self, screen):
@@ -12,6 +12,7 @@ class Dimensions:
    board_left_corner = (None,None)
    tile_width = None
    tile_height = None
+   font_size = None
 
 
    def get_dimensions(self):
@@ -34,6 +35,7 @@ class Dimensions:
    def calculate_tile_size(self):
        self.tile_width = 0.0818 * self.board_width
        self.tile_height = 0.1319 * self.board_width
+       self.font_size = 0.084 * self.tile_height
 
    def calculate_all(self, screen):
        self.get_dimensions()
