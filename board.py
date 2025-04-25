@@ -13,7 +13,7 @@ class Board:
         self.font_size = dim.font_size
         self.inner_width = dim.board_width - 2 * dim.tile_height
         self.inner_left_corner = (dim.board_left_corner[0]+dim.tile_height, dim.board_left_corner[1]+dim.tile_height)
-        self.dice = Dice(self.tile_height, self.tile_width/2, self.font_size)
+
 
 
 
@@ -25,11 +25,12 @@ class Board:
         for tile in tile_data:
             tile_type = tile["tile_type"]
             name = tile["name"]
+            index = tile["index"]
 
             if i==0 or i==10 or i==29 or i==39:
                 image = tile.get("image")
                 image = f"images/{image}" if image else None
-                action = Action(name, tile_type, self.tile_height, self.tile_height, image)
+                action = Action(name, tile_type, self.tile_height, self.tile_height, image, index)
                 self.tiles.append(action)
             else:
                 if tile_type == "Street":
@@ -37,9 +38,9 @@ class Board:
                     price = tile.get("price")
                     rent = tile.get("rent")
                     if (0 < i < 10) or (19 < i < 29):
-                        street = Street(name, tile_type, self.tile_width, self.tile_height, color, price, rent, owner=None)
+                        street = Street(name, tile_type, self.tile_width, self.tile_height, color, price, rent, index, owner=None)
                     else:
-                        street = Street(name, tile_type, self.tile_height, self.tile_width, color, price, rent, owner=None)
+                        street = Street(name, tile_type, self.tile_height, self.tile_width, color, price, rent, index, owner=None)
                     self.tiles.append(street)
 
                 elif tile_type == "Station":
@@ -49,9 +50,9 @@ class Board:
                     image = f"images/{image}" if image else None
 
                     if (0 < i < 10) or (19 < i < 29):
-                        station = Station(name, tile_type, self.tile_width, self.tile_height, image, price=price, rent=rent, owner=None)
+                        station = Station(name, tile_type, self.tile_width, self.tile_height, image, price, rent, index, owner=None)
                     else:
-                        station = Station(name, tile_type, self.tile_height, self.tile_width, image, price=price, rent=rent, owner=None)
+                        station = Station(name, tile_type, self.tile_height, self.tile_width, image, price, rent, index, owner=None)
                     self.tiles.append(station)
 
                 elif tile_type == "Action":
@@ -59,9 +60,9 @@ class Board:
                     image = f"images/{image}" if image else None
 
                     if (0 < i < 10) or (19 < i < 29):
-                        action = Action(name, tile_type, self.tile_width, self.tile_height, image)
+                        action = Action(name, tile_type, self.tile_width, self.tile_height, image, index)
                     else:
-                        action = Action(name, tile_type, self.tile_height, self.tile_width, image)
+                        action = Action(name, tile_type, self.tile_height, self.tile_width, image, index)
                     self.tiles.append(action)
             i=i+1
 

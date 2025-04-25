@@ -1,10 +1,11 @@
 import pygame
 class Tile:
-    def __init__(self, name, tile_type, width, height):
+    def __init__(self, name, tile_type, width, height, index):
         self.name = name
         self.tile_type = tile_type
         self.width = width
         self.height = height
+        self.index = index
         if self.width<self.height:
             self.font = 0.084 * self.height
         else:
@@ -72,8 +73,8 @@ class Tile:
 
 
 class Street(Tile):
-    def __init__(self, name, tile_type, width, height, color, price, rent, owner):
-        super().__init__(name, tile_type, width, height)
+    def __init__(self, name, tile_type, width, height, color, price, rent, index, owner):
+        super().__init__(name, tile_type, width, height, index)
         self.color = color
         self.price = price
         self.rent = rent
@@ -101,8 +102,8 @@ class Street(Tile):
 
 
 class Station(Tile):
-    def __init__(self, name, tile_type, width, height, image, price, rent, owner):
-        super().__init__(name, tile_type, width, height)
+    def __init__(self, name, tile_type, width, height, image, price, rent, index, owner):
+        super().__init__(name, tile_type, width, height, index)
         self.image = image
         self.price = price
         self.rent = rent
@@ -125,8 +126,8 @@ class Station(Tile):
 
 
 class Action(Tile):
-    def __init__(self, name, tile_type, width, height, image):
-        super().__init__(name, tile_type, width, height)
+    def __init__(self, name, tile_type, width, height, image, index):
+        super().__init__(name, tile_type, width, height, index)
         self.image = image
 
     def draw(self, screen, x, y, rotation):

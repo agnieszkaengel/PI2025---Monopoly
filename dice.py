@@ -5,13 +5,12 @@ class Dice:
         self.dice_size = width*0.5
         self.font_size = font
         self.button = None
-        self.num1, self.num2 = None, None
+        self.num1, self.num2 = 0,0
         self.showing_dice = False
         self.show_start_time = None
 
     def click(self, screen, x, y, event):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        self.draw_button(screen, x, y)
+        #self.draw_button(screen, x, y)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.button.collidepoint(event.pos):
                 #pygame.draw.rect(screen, (255, 255, 255), (x, y, self.width, self.height))
