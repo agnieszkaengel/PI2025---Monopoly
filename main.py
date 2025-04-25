@@ -1,8 +1,6 @@
 import pygame
-from board import Board
-from dice import Dice
-from tile import Tile, Street, Station
 from dimensions_generator import Dimensions
+from board_service import BoardService
 
 def main():
     pygame.init()
@@ -14,23 +12,23 @@ def main():
     #station1 = Station("Dworzec Gdanski", 1, 100, 130, pygame.image.load("Train.png"), 150, 30, None)
 
     dim = Dimensions(screen)
-    board = Board(dim)
+    board_service = BoardService(dim)
     running = True
     screen.fill((255, 255, 255))
 
     while running:
+        screen.fill((255, 255, 255))
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                board_service.handle_click(screen, event)
+            #board_service.dice.click(screen, board_service.board.inner_left_corner[0] + board_service.board.inner_width - board_service.dice.button_size[0], board_service.board.inner_left_corner[1] + board_service.board.inner_width - board_service.dice.button_size[1], event)
 
-            if event.type == pygame.QUIT:
-                running = False
-            board.dice.click(screen, board.inner_left_corner[0] + board.inner_width - board.dice.button_size[0], board.inner_left_corner[1] + board.inner_width - board.dice.button_size[1], event)
 
-        board.draw(screen)
-        board.dice.update(screen, board.inner_left_corner[0] + board.inner_width - board.dice.button_size[0],
-                          board.inner_left_corner[1] + board.inner_width - board.dice.button_size[1])
-
+        board_service.board.draw(screen)
+        board_service.start_pos(screen)  # rysuj gracza tylko z aktualną pozycją
+        board_service.update(screen)
         pygame.display.flip()
 
     pygame.quit()
