@@ -19,6 +19,7 @@ def main():
     running = True
     screen.fill((255, 255, 255))
     current_state = 0  # 0 -menu, 1-okno podania nickow dla podstawy, 2-plansza dla podstawowej rozgrywki, 3-okno wyboru dla personalizowanej rozgrywki
+    inbox_active = 0
 
     while running:
         screen.fill((255, 255, 255))
@@ -43,13 +44,22 @@ def main():
                     current_state = 3
                 elif menu.button_1.collidepoint(event.pos) and current_state == 1:
                     current_state = 2
-                elif menu.inbox_g1.collidepoint(event.pos) and current_state == 1:
-                    menu.handle_event(event)
+                elif menu.inbox_g1_n.collidepoint(event.pos): #and current_state == 1:
+                    inbox_active = 1
+                elif menu.inbox_g2_n.collidepoint(event.pos): #and current_state == 1:
+                    inbox_active = 2
+                elif menu.inbox_g1_p.collidepoint(event.pos): #and current_state == 1:
+                    inbox_active = 3
+                elif menu.inbox_g2_p.collidepoint(event.pos): #and current_state == 1:
+                    inbox_active = 4
                 elif board_service.dice.button.collidepoint(event.pos) and current_state ==2:
                     board_service.handle_click(screen, event)
                 else:
                     pass
-
+            elif inbox_active != 0:
+                menu.handle_event(event, inbox_active)
+            #menu.handle_event(event)
+            #print(menu.user_text)
             #board_service.dice.click(screen, board_service.board.inner_left_corner[0] + board_service.board.inner_width - board_service.dice.button_size[0], board_service.board.inner_left_corner[1] + board_service.board.inner_width - board_service.dice.button_size[1], event)
 
 
