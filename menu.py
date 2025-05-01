@@ -68,10 +68,10 @@ class Menu:
         self.draw_main_part(screen, "WYBÓR NICKU I PIONKA")
         self.draw_button(screen, "Gotowe", self.start_pos[0]+self.title_size, self.start_pos[1]+self.button_size[1]*2)
 
-        self.draw_image(screen, "1.png", self.start_pos[0]+self.height*0.15, self.start_pos[1]+self.height*0.15)
-        self.draw_image(screen, "2.png", self.start_pos[0] + self.height * 0.15 * 2.5, self.start_pos[1] + self.height * 0.15)
-        self.draw_image(screen, "3.png", self.start_pos[0] + self.height * 0.15 * 4, self.start_pos[1] + self.height * 0.15)
-        self.draw_image(screen, "4.png", self.start_pos[0] + self.height * 0.15 * 5.5, self.start_pos[1] + self.height * 0.15)
+        self.draw_image(screen, "pionek1.png", self.start_pos[0]+self.height*0.15, self.start_pos[1]+self.height*0.15)
+        self.draw_image(screen, "pionek2.png", self.start_pos[0] + self.height * 0.15 * 2.5, self.start_pos[1] + self.height * 0.15)
+        self.draw_image(screen, "pionek3.png", self.start_pos[0] + self.height * 0.15 * 4, self.start_pos[1] + self.height * 0.15)
+        self.draw_image(screen, "pionek4.png", self.start_pos[0] + self.height * 0.15 * 5.5, self.start_pos[1] + self.height * 0.15)
 
         self.inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size-self.button_size[0], self.start_pos[1], 'Gracz 1:'))
         self.inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*0.7, ''))

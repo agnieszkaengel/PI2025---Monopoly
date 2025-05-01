@@ -3,7 +3,7 @@ from dice import Dice
 from player import Player
 from dimensions_generator import Dimensions
 import pygame
-
+start_add = 200
 class BoardService:
     def __init__(self, dim:Dimensions):
         self.board = Board(dim)
@@ -31,6 +31,7 @@ class BoardService:
             self.pending_move = True
 
     def try_change_pos(self, idx):
+        previous_tile_index = self.players[idx].tile_index
         if self.pending_move and not self.dice.showing_dice:
             suma = self.dice.get_sum()
             x, y = self.players[idx].position
@@ -103,8 +104,11 @@ class BoardService:
                         distance_y = abs(down + 1) * self.board.tile_width + 0.5 * self.board.tile_height + 0.5 * self.board.tile_width if down!=0 else 0
                     self.players[idx].position = (x - distance_x, y - distance_y)
 
-            self.players[idx].tile_index = (self.players[idx].tile_index + suma) % 40
-            print(f"{self.players[idx].name} stoi na polu {self.players[idx].tile_index}")
+            new_index = (self.players[idx].tile_index + suma) % 40
+            if previous_tile_index > new_index:
+                self.players[idx].money += start_add
+
+            self.players[idx].tile_index = new_index
             self.pending_move = False
             return True
 
@@ -114,4 +118,6 @@ class BoardService:
 
         self.dice.draw_button(screen, button_x, button_y)
         self.dice.update(screen, button_x, button_y)
-        return self.try_change_pos(idx)
+        if self.try_change_pos(idx):
+            return True, self.dice.is_double()
+        return False, False

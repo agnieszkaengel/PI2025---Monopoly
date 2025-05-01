@@ -3,6 +3,8 @@ from dimensions_generator import Dimensions
 from board_service import BoardService
 from menu import Menu
 from player import Player
+begin_money = 1500
+
 class GamePlay:
     def __init__(self, screen, running):
         self.dimensions = Dimensions(screen)
@@ -16,10 +18,11 @@ class GamePlay:
         self.players_created = False
         self.players: list [Player] = []
         self.current_player_idx = 0
+        self.double_rolls = 0
 
     def create_players(self, start_money):
         for i in range(self.players_number):
-            self.players.append(Player(self.menu.users[i][0], self.menu.users[i][1], start_money, (self.board_service.start[0]-(self.dimensions.tile_height*0.5)+(i*0.25*self.dimensions.tile_height)+(0.125*self.dimensions.tile_height), self.board_service.start[1] ), 0))
+            self.players.append(Player(self.menu.users[i][0], self.menu.users[i][1], start_money, self.board_service.start, 0))
 
     def run(self, screen):
         while self.running:
@@ -28,24 +31,27 @@ class GamePlay:
                 self.menu.draw_menu(screen)
             elif self.current_state == 1:
                 self.menu.draw_nick_menu(screen)
-                print("Ilość przycisków:", len(self.menu.buttons))
             elif self.current_state == 2:
                 if not self.players_created:
-                    self.create_players(1500)
+                    self.create_players(begin_money)
                     self.board_service.players = self.players
                     self.players_created = True
-
-                current_player = self.players[self.current_player_idx]
-                #self.board_service.player = current_player
-                print(current_player.name)
 
                 self.board_service.board.draw(screen)
                 self.board_service.start_pos(screen)
 
-                turn_finished = self.board_service.update(screen, self.current_player_idx)
+                turn_finished, was_double = self.board_service.update(screen, self.current_player_idx)
                 if turn_finished:
-                    self.current_player_idx = (self.current_player_idx + 1) % self.players_number
-                    print(f"Teraz tura gracza: {self.players[self.current_player_idx].name}")
+                    if was_double:
+                        self.double_rolls += 1
+                        if self.double_rolls < 3:
+                            pass
+                        else:
+                            self.double_rolls = 0
+                            self.current_player_idx = (self.current_player_idx + 1) % self.players_number
+                    else:
+                        self.double_rolls = 0
+                        self.current_player_idx = (self.current_player_idx + 1) % self.players_number
             else:
                 pass
 
