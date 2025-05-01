@@ -67,3 +67,6 @@ class Dice:
 
     def get_sum(self):
         return self.num1+self.num2
+
+    def is_double(self):
+        return self.num1 == self.num2

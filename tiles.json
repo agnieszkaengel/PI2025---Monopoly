@@ -1,210 +1,238 @@
 [
-    {"name": "WIEZIENIE", "tile_type": "Action", "image": "prison.png"},
+    {"name": "WIEZIENIE", "tile_type": "Action", "image": "prison.png", "index": 10},
     {
         "name": "Ulica Plowiecka",
         "tile_type": "Street",
         "color": [255, 0, 255],
         "price": 140,
-        "rent": null
+        "rent": null,
+        "index": 11
     },
     {
         "name": "Elektrownia",
         "tile_type": "Station",
         "price": 150,
         "rent": null,
-        "image": "bulb.png"
+        "image": "bulb.png",
+        "index": 12
     },
     {
         "name": "Ulica Marsa",
         "tile_type": "Street",
         "color": [255, 0, 255],
         "price": 140,
-        "rent": null
+        "rent": null,
+        "index": 13
     },
     {
         "name": "Ulica Grochowska",
         "tile_type": "Street",
         "color": [255, 0, 255],
         "price": 160,
-        "rent": null
+        "rent": null,
+        "index": 14
     },
     {
         "name": "Dworzec Gdanski",
         "tile_type": "Station",
         "price": 200,
         "rent": null,
-        "image": "Train.png"
+        "image": "Train.png",
+        "index": 15
     },
     {
         "name": "Ulica Obozowa",
         "tile_type": "Street",
         "color": [255, 140, 0],
         "price": 180,
-        "rent": null
+        "rent": null,
+        "index": 16
     },
-    {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png"},
+    {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png", "index": 17},
     {
         "name": "Ulica Gorczewska",
         "tile_type": "Street",
         "color": [255, 140, 0],
         "price": 180,
-        "rent": null
+        "rent": null,
+        "index": 18
     },
     {
         "name": "Ulica Wolska",
         "tile_type": "Street",
         "color": [255, 140, 0],
         "price": 200,
-        "rent": null
+        "rent": null,
+        "index": 19
     },
-    {"name": "PARKING", "tile_type": "Action", "image": "parking.png"},
+    {"name": "PARKING", "tile_type": "Action", "image": "parking.png", "index": 20},
     {
         "name": "Ulica Mickiewicza",
         "tile_type": "Street",
         "color": [255, 0, 0],
         "price": 220,
-        "rent": null
+        "rent": null,
+        "index": 21
     },
-    {"name": "Szansa", "tile_type": "Action", "image": "chance.png"},
+    {"name": "Szansa", "tile_type": "Action", "image": "chance.png", "index": 22},
     {
         "name": "Ulica Slowackiego",
         "tile_type": "Street",
         "color": [255, 0, 0],
         "price": 220,
-        "rent": null
+        "rent": null,
+        "index": 23
     },
     {
         "name": "Ulica Wilsona",
         "tile_type": "Street",
         "color": [255, 0, 0],
         "price": 240,
-        "rent": null
+        "rent": null,
+        "index": 24
     },
     {
         "name": "Dworzec Wschodni",
         "tile_type": "Station",
         "price": 200,
         "rent": null,
-        "image": "Train.png"
+        "image": "Train.png",
+        "index": 25
     },
     {
         "name": "Ulica Swietokrzyska",
         "tile_type": "Street",
         "color": [255, 255, 0],
         "price": 260,
-        "rent": null
+        "rent": null,
+        "index": 26
     },
     {
         "name": "Krakowskie Przedmiescie",
         "tile_type": "Street",
         "color": [255, 255, 0],
         "price": 60,
-        "rent": null
+        "rent": null,
+        "index": 27
     },
     {
         "name": "Wodociagi",
         "tile_type": "Station",
         "price": 150,
         "rent": null,
-        "image": "tap.png"
+        "image": "tap.png",
+        "index": 28
     },
     {
         "name": "Nowy Swiat",
         "tile_type": "Street",
         "color": [255, 255, 0],
         "price": 280,
-        "rent": null
+        "rent": null,
+        "index": 29
     },
     {
         "name": "Aleje Ujazdowskie",
         "tile_type": "Street",
         "color": [0, 0, 128],
         "price": 400,
-        "rent": null
+        "rent": null,
+        "index": 39
     },
-    {"name": "Domiar Podatkowy", "tile_type": "Action", "image": "ring.png"},
+    {"name": "Domiar Podatkowy", "tile_type": "Action", "image": "ring.png", "index": 38},
     {
         "name": "Ulica Belwederska",
         "tile_type": "Street",
         "color": [0, 0, 128],
         "price": 350,
-        "rent": null
+        "rent": null,
+        "index": 37
     },
-    {"name": "Szansa", "tile_type": "Action", "image": "chance.png"},
+    {"name": "Szansa", "tile_type": "Action", "image": "chance.png", "index": 36},
     {
         "name": "Dworzec Centralny",
         "tile_type": "Station",
         "price": 200,
         "rent": null,
-        "image": "Train.png"
+        "image": "Train.png",
+        "index": 35
     },
     {
         "name": "Aleje Jerozolimskie",
         "tile_type": "Street",
         "color": [0, 128, 0],
         "price": 320,
-        "rent": null
+        "rent": null,
+        "index": 34
     },
-    {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png"},
+    {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png", "index": 33},
     {
         "name": "Ulica Marszalkowska",
         "tile_type": "Street",
         "color": [0, 128, 0],
         "price": 300,
-        "rent": null
+        "rent": null,
+        "index": 32
     },
     {
         "name": "Plac Krzyzy",
         "tile_type": "Street",
         "color": [0, 128, 0],
         "price": 300,
-        "rent": null
+        "rent": null,
+        "index": 31
     },
-    {"name": "IDZ DO WIEZIENIA", "tile_type": "Action", "image": "police.png"},
+    {"name": "IDZ DO WIEZIENIA", "tile_type": "Action", "image": "police.png", "index": 30},
     {
         "name": "Ulica Targowa",
         "tile_type": "Street",
         "color": [173, 216, 230],
         "price": 300,
-        "rent": null
+        "rent": null,
+        "index": 9
     },
     {
         "name": "Ulica Jagiellonska",
         "tile_type": "Street",
         "color": [173, 216, 230],
         "price": 300,
-        "rent": null
+        "rent": null,
+        "index": 8
     },
-    {"name": "Szansa", "tile_type": "Action", "image": "chance.png"},
+    {"name": "Szansa", "tile_type": "Action", "image": "chance.png", "index": 7},
     {
         "name": "Ulica Radzyminska",
         "tile_type": "Street",
         "color": [173, 216, 230],
         "price": 100,
-        "rent": null
+        "rent": null,
+        "index": 6
     },
     {
         "name": "Dworzec Zachodni",
         "tile_type": "Station",
         "price": 200,
         "rent": null,
-        "image": "Train.png"
+        "image": "Train.png",
+        "index": 5
     },
-    {"name": "Podatek dochodowy", "tile_type": "Action", "image": "diamond.png"},
+    {"name": "Podatek dochodowy", "tile_type": "Action", "image": "diamond.png", "index": 4},
     {
         "name": "Ulica Stalowa",
         "tile_type": "Street",
         "color": [139, 69, 19],
         "price": 60,
-        "rent": null
+        "rent": null,
+        "index": 3
     },
-    {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png"},
+    {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png", "index": 2},
     {
         "name": "Ulica Konopacka",
         "tile_type": "Street",
         "color": [139, 69, 19],
         "price": 300,
-        "rent": null
+        "rent": null,
+        "index": 1
     },
-    {"name": "START", "tile_type": "Action", "image": "start.png"}
+    {"name": "START", "tile_type": "Action", "image": "start.png", "index": 0}
 ]
