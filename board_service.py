@@ -3,7 +3,6 @@ from dice import Dice
 from player import Player
 from dimensions_generator import Dimensions
 import pygame
-start_add = 200
 class BoardService:
     def __init__(self, dim:Dimensions):
         self.board = Board(dim)
@@ -11,6 +10,8 @@ class BoardService:
         self.players: list [Player] = []
         self.dice = Dice(self.board.tile_height, self.board.tile_width / 2, self.board.font_size)
         self.pending_move = False
+        self.list_number = 0
+        self.start_add = 200
 
     def start_pos(self, screen):
         for player in self.players:
@@ -20,13 +21,9 @@ class BoardService:
             image_rect = image.get_rect(center = player.position)
             screen.blit(image, image_rect)
 
-    def handle_click(self, screen, event):
-        self.dice.click(
-            screen,
-            self.board.inner_left_corner[0] + self.board.inner_width - self.dice.button_size[0],
-            self.board.inner_left_corner[1] + self.board.inner_width - self.dice.button_size[1],
-            event
-        )
+
+    def handle_click(self, event):
+        self.dice.click(event)
         if self.dice.showing_dice:
             self.pending_move = True
 
@@ -106,9 +103,15 @@ class BoardService:
 
             new_index = (self.players[idx].tile_index + suma) % 40
             if previous_tile_index > new_index:
-                self.players[idx].money += start_add
-
+                self.players[idx].money += self.start_add
             self.players[idx].tile_index = new_index
+            print(self.players[idx].tile_index)
+
+            tile_type, number = self.board.check_position(self.players[idx].tile_index)
+            self.list_number = number
+
+            print(tile_type)
+
             self.pending_move = False
             return True
 
@@ -121,3 +124,4 @@ class BoardService:
         if self.try_change_pos(idx):
             return True, self.dice.is_double()
         return False, False
+

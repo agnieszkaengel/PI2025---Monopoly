@@ -9,15 +9,12 @@ class Dice:
         self.showing_dice = False
         self.show_start_time = None
 
-    def click(self, screen, x, y, event):
-        #self.draw_button(screen, x, y)
+    def click(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.button.collidepoint(event.pos):
-                #pygame.draw.rect(screen, (255, 255, 255), (x, y, self.width, self.height))
                 self.random_number()
                 self.show_start_time = time.time()
                 self.showing_dice = True
-                #self.draw_button(screen, x, y, event)
 
     def draw_button (self, screen, x, y):
             pygame.draw.rect(screen, (193, 225, 193), (x, y, self.button_size[0], self.button_size[1]))
@@ -58,10 +55,10 @@ class Dice:
         if self.showing_dice:
             current_time = time.time()
             if current_time - self.show_start_time <= 3:
-                pygame.draw.rect(screen, (255, 255, 255), (x, y, self.button_size[0], self.button_size[1]))  # wyczyść tło
+                pygame.draw.rect(screen, (200, 220, 200), (x, y, self.button_size[0], self.button_size[1]))  # wyczyść tło
                 self.show_dice(screen, x, y)
             else:
-                pygame.draw.rect(screen, (255, 255, 255),(x, y-self.button_size[1], self.button_size[0], self.button_size[1]*2))  # wyczyść tło
+                pygame.draw.rect(screen, (200, 220, 200),(x, y-self.button_size[1], self.button_size[0], self.button_size[1]*2))  # wyczyść tło
                 self.showing_dice = False
                 self.draw_button(screen, x, y)
 

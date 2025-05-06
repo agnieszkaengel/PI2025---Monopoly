@@ -13,8 +13,10 @@ class Menu:
         self.start_pos = (self.menu_left_corner[0] + 0.5 * self.width, self.menu_left_corner[1] + self.title_size * 3)
         self.end_pos = (self.menu_left_corner[0] + 0.5 * self.width, self.menu_left_corner[1] + self.height - self.title_size)
         self.buttons: list [pygame.Rect] = self.create_buttons_list()#[] #[0] - przycisk gra podstawowa, [1] - personalizowana rozgrywka, [2] - przycisk gotowe w menu podstawowej rozgrywki
-        self.inboxes: list [pygame.Rect] = [] #[0] i [1] - gracz 1 [nick] i [nr pionka] itd
+        self.nick_inboxes: list [pygame.Rect] = [] #[0] i [1] - gracz 1 [nick] i [nr pionka] itd
+        self.personalize_inboxes: list[pygame.Rect] = []
         self.users = []
+        self.personalize_settings = ['', '', '']
 
     def add_user (self, nick:str, pionek:str):
         self.users.append((nick, pionek))
@@ -25,13 +27,19 @@ class Menu:
 
     def create_buttons_list(self):
         buttons = []
-        buttons.append(pygame.Rect(self.start_pos[0]+self.title_size, self.start_pos[1], self.button_size[0], self.button_size[1]))
-        buttons.append(pygame.Rect(self.start_pos[0] + self.title_size, self.start_pos[1]+self.button_size[1]*1.5, self.button_size[0], self.button_size[1]))
-        buttons.append(pygame.Rect(self.start_pos[0]+self.title_size, self.start_pos[1]+self.button_size[1]*2, self.button_size[0], self.button_size[1]))
+        buttons.append(pygame.Rect(self.start_pos[0]+self.title_size, self.start_pos[1], self.button_size[0], self.button_size[1])) #gra podstawowa
+        buttons.append(pygame.Rect(self.start_pos[0] + self.title_size, self.start_pos[1]+self.button_size[1]*1.5, self.button_size[0], self.button_size[1])) # gra personalizowana
+        buttons.append(pygame.Rect(self.start_pos[0]+self.title_size, self.start_pos[1]+self.button_size[1]*2, self.button_size[0], self.button_size[1])) #gotowe w nick menu dla 2os
+        buttons.append(pygame.Rect(self.start_pos[0], self.start_pos[1] + self.button_size[1] * 2, self.button_size[0], self.button_size[1]))  # gotowe w menu personalizowanej rozgrywki
+
         return buttons
-    def draw_main_part(self, screen, text):
-        pygame.draw.rect(screen, (193, 225, 193),(self.menu_left_corner[0], self.menu_left_corner[1], self.width - 1, self.height - 1))
-        pygame.draw.rect(screen, (0, 0, 0),(self.menu_left_corner[0], self.menu_left_corner[1], self.width, self.height), 3)
+    def draw_main_part(self, screen, text, line, state):
+        if state == 4:
+            pygame.draw.rect(screen, (193, 225, 193),(self.menu_left_corner[0], self.menu_left_corner[1], self.width - 1, self.height * 1.5 - 1))
+            pygame.draw.rect(screen, (0, 0, 0),(self.menu_left_corner[0], self.menu_left_corner[1], self.width, self.height * 1.5), 3)
+        else:
+            pygame.draw.rect(screen, (193, 225, 193),(self.menu_left_corner[0], self.menu_left_corner[1], self.width - 1, self.height - 1))
+            pygame.draw.rect(screen, (0, 0, 0),(self.menu_left_corner[0], self.menu_left_corner[1], self.width, self.height), 3)
 
         image = pygame.image.load("menu.png").convert_alpha()
         im_size = self.height * 1.5
@@ -44,10 +52,11 @@ class Menu:
         text = font.render(str(text), True, text_color)
         text_rect = text.get_rect(center=(self.menu_left_corner[0] + 0.5 * self.width, self.menu_left_corner[1] + self.title_size))
         screen.blit(text, text_rect)
-        pygame.draw.line(screen, text_color, self.start_pos, self.end_pos, 3)
+        if line:
+            pygame.draw.line(screen, text_color, self.start_pos, self.end_pos, 3)
 
     def draw_menu(self, screen):
-        self.draw_main_part(screen, "MENU GRY")
+        self.draw_main_part(screen, "MENU GRY", True, 0)
         self.draw_button(screen, "Gra podstawowa", self.start_pos[0]+self.title_size, self.start_pos[1])
         self.draw_button(screen, "Gra personalizowana", self.start_pos[0] + self.title_size, self.start_pos[1]+self.button_size[1]*1.5)
 
@@ -64,44 +73,63 @@ class Menu:
         screen.blit(text, text_rect)
        # return pygame.Rect(x, y, self.button_size[0], self.button_size[1])
 
-    def draw_nick_menu(self, screen):
-        self.draw_main_part(screen, "WYBÓR NICKU I PIONKA")
-        self.draw_button(screen, "Gotowe", self.start_pos[0]+self.title_size, self.start_pos[1]+self.button_size[1]*2)
+    def draw_nick_menu(self, screen, playersnum, state):
+        text_color = (193, 225, 193)
+        font = pygame.font.SysFont('Arial', int(self.text_size * 0.9), True)
+
+        self.draw_main_part(screen, "WYBÓR NICKU I PIONKA", False, state)
+        self.draw_button(screen, "Gotowe", self.start_pos[0]+self.title_size, self.start_pos[1]+self.button_size[1]*1.7)
 
         self.draw_image(screen, "pionek1.png", self.start_pos[0]+self.height*0.15, self.start_pos[1]+self.height*0.15)
         self.draw_image(screen, "pionek2.png", self.start_pos[0] + self.height * 0.15 * 2.5, self.start_pos[1] + self.height * 0.15)
         self.draw_image(screen, "pionek3.png", self.start_pos[0] + self.height * 0.15 * 4, self.start_pos[1] + self.height * 0.15)
         self.draw_image(screen, "pionek4.png", self.start_pos[0] + self.height * 0.15 * 5.5, self.start_pos[1] + self.height * 0.15)
 
-        self.inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size-self.button_size[0], self.start_pos[1], 'Gracz 1:'))
-        self.inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*0.7, ''))
 
-        self.inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*1.7, 'Gracz 2:'))
-        self.inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*2.4, ""))
-
-        text_color = (193, 225, 193)
-        font = pygame.font.SysFont('Arial', int(self.text_size * 0.9), True)
+        self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size-self.button_size[0], self.start_pos[1], 'Gracz 1:', 1))
+        self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*0.7, '', 1))
+        self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*1.7, 'Gracz 2:', 1))
+        self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size - self.button_size[0], self.start_pos[1]+self.button_size[1]*2.4, "", 1))
 
         nick_surface = font.render("Twój nick:", True, text_color)
-        screen.blit(nick_surface, (self.inboxes[0].x + 5, self.inboxes[0].y + 5))
-        screen.blit(nick_surface, (self.inboxes[2].x + 5, self.inboxes[2].y + 5))
-
+        screen.blit(nick_surface, (self.nick_inboxes[0].x + 5, self.nick_inboxes[0].y + 5))
+        screen.blit(nick_surface, (self.nick_inboxes[2].x + 5, self.nick_inboxes[2].y + 5))
         pionek_surface = font.render("Twój numer pionka:", True, text_color)
-        screen.blit(pionek_surface, (self.inboxes[1].x + 5, self.inboxes[1].y + 5))
-        screen.blit(pionek_surface, (self.inboxes[3].x + 5, self.inboxes[3].y + 5))
+        screen.blit(pionek_surface, (self.nick_inboxes[1].x + 5, self.nick_inboxes[1].y + 5))
+        screen.blit(pionek_surface, (self.nick_inboxes[3].x + 5, self.nick_inboxes[3].y + 5))
 
+        if playersnum > 2:
+            self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size-self.button_size[0], self.start_pos[1]+self.button_size[1]*3.4,'Gracz 3:', 1))
+            self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.title_size-self.button_size[0], self.start_pos[1] + self.button_size[1] * 4.1, '', 1))
+            screen.blit(nick_surface, (self.nick_inboxes[4].x + 5, self.nick_inboxes[4].y + 5))
+            screen.blit(pionek_surface, (self.nick_inboxes[5].x + 5, self.nick_inboxes[5].y + 5))
+
+            text_surface = font.render(self.users[2][0], True, text_color)
+            screen.blit(text_surface, (self.nick_inboxes[4].x + nick_surface.get_width() * 1.2, self.nick_inboxes[4].y + 5))  # nick gracza 3
+            text_surface = font.render(self.users[2][1], True, text_color)
+            screen.blit(text_surface, (self.nick_inboxes[5].x + pionek_surface.get_width() * 1.1, self.nick_inboxes[5].y + 5))  # pionek gracza 3
+
+        if playersnum > 3:
+            self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] + self.title_size, self.start_pos[1] + self.button_size[1] * 3.4, 'Gracz 4:', 1))
+            self.nick_inboxes.append(self.draw_inbox(screen, self.start_pos[0] + self.title_size, self.start_pos[1] + self.button_size[1] * 4.1, "", 1))
+            screen.blit(nick_surface, (self.nick_inboxes[6].x + 5, self.nick_inboxes[6].y + 5))
+            screen.blit(pionek_surface, (self.nick_inboxes[7].x + 5, self.nick_inboxes[7].y + 5))
+
+            text_surface = font.render(self.users[3][0], True, text_color)
+            screen.blit(text_surface, (self.nick_inboxes[6].x + nick_surface.get_width() * 1.2, self.nick_inboxes[6].y + 5))  # nick gracza 4
+            text_surface = font.render(self.users[3][1], True, text_color)
+            screen.blit(text_surface, (self.nick_inboxes[7].x + pionek_surface.get_width() * 1.1, self.nick_inboxes[7].y + 5))  # pionek gracza 4
 
         text_surface = font.render(self.users[0][0], True, text_color)
-        screen.blit(text_surface, (self.inboxes[0].x+nick_surface.get_width()*1.2, self.inboxes[0].y + 5))
+        screen.blit(text_surface, (self.nick_inboxes[0].x+nick_surface.get_width()*1.2, self.nick_inboxes[0].y + 5)) #nick gracza 1
+        text_surface = font.render(self.users[0][1], True, text_color)
+        screen.blit(text_surface,(self.nick_inboxes[1].x + pionek_surface.get_width() * 1.1, self.nick_inboxes[1].y + 5)) #pionek gracza 1
+
 
         text_surface = font.render(self.users[1][0], True, text_color)
-        screen.blit(text_surface, (self.inboxes[2].x+nick_surface.get_width()*1.2, self.inboxes[2].y + 5))
-
-        text_surface = font.render(self.users[0][1], True, text_color)
-        screen.blit(text_surface, (self.inboxes[1].x + pionek_surface.get_width() * 1.1, self.inboxes[1].y + 5))
-
+        screen.blit(text_surface, (self.nick_inboxes[2].x+nick_surface.get_width()*1.2, self.nick_inboxes[2].y + 5)) #nick gracza 2
         text_surface = font.render(self.users[1][1], True, text_color)
-        screen.blit(text_surface, (self.inboxes[3].x + pionek_surface.get_width() * 1.1, self.inboxes[3].y + 5))
+        screen.blit(text_surface, (self.nick_inboxes[3].x + pionek_surface.get_width() * 1.1, self.nick_inboxes[3].y + 5))#pionek gracza 2
 
 
     def draw_image(self, screen, name, x, y):
@@ -123,30 +151,11 @@ class Menu:
                     self.users[player] = (self.users[player][0], self.users[player][1][:-1])
                 else:
                     self.users[player] = (self.users[player][0], self.users[player][1] + event.unicode)
-            '''
-            if event.key == pygame.K_BACKSPACE:
-                if user == 1:A
-                    self.user_nick1 = self.user_nick1[:-1]
-                elif user == 2:
-                    self.user_nick2 = self.user_nick2[:-1]
-                elif user == 3:
-                    self.user_pionek1 = self.user_pionek1[:-1]
-                elif user == 4:
-                    self.user_pionek2 = self.user_pionek2[:-1]
-            else:
-                if user == 1:
-                    self.user_nick1 += event.unicode
-                elif user == 2:
-                    self.user_nick2 += event.unicode
-                elif user == 3:
-                    self.user_pionek1 += event.unicode
-                elif user == 4:
-                    self.user_pionek2 += event.unicode
-            '''
-    def draw_inbox(self, screen, x, y, text):
 
-        pygame.draw.rect(screen, (47, 79, 79), (x, y, self.button_size[0], self.button_size[1]//2))
-        pygame.draw.rect(screen, (0, 0, 0), (x, y, self.button_size[0], self.button_size[1]//2), 3)
+    def draw_inbox(self, screen, x, y, text, size):
+
+        pygame.draw.rect(screen, (47, 79, 79), (x, y, self.button_size[0]*size, self.button_size[1]//2))
+        pygame.draw.rect(screen, (0, 0, 0), (x, y, self.button_size[0]*size, self.button_size[1]//2), 3)
         #pygame.draw.rect(screen, (0, 0, 0), (x, y, self.button_size[0], self.button_size[1] // 2), 3)
 
         text_color = (47, 79, 79)
@@ -155,6 +164,42 @@ class Menu:
         text_rect = text_surface.get_rect()
         text_rect.center = (x+self.title_size, y - self.text_size)
         screen.blit(text_surface, text_rect)
-        return pygame.Rect(x, y, self.button_size[0], self.button_size[1]//2)
+        return pygame.Rect(x, y, self.button_size[0]*size, self.button_size[1]//2)
+
+    def personalize_game_menu(self, screen):
+        self.draw_main_part(screen, "WYBIERZ OPCJE ROZGRYWKI", False, 3)
+
+        self.personalize_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.button_size[0], self.start_pos[1], "", 2))
+        self.personalize_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.button_size[0], self.start_pos[1] + self.button_size[1] * 0.7, '', 2))
+        self.personalize_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.button_size[0], self.start_pos[1] + self.button_size[1] * 1.4, '', 2))
+
+        text_color = (193, 225, 193)
+        font = pygame.font.SysFont('Arial', int(self.text_size * 0.9), True)
+
+        lgr_surface = font.render("Podaj liczbę graczy: ", True, text_color)
+        screen.blit(lgr_surface, (self.personalize_inboxes[0].x + 5, self.personalize_inboxes[0].y + 5))
+
+        mgr_surface = font.render("Podaj kwotę początkową majątku graczy: ", True, text_color)
+        screen.blit(mgr_surface, (self.personalize_inboxes[1].x + 5, self.personalize_inboxes[1].y + 5))
+
+        sgr_surface = font.render("Podaj kwotą dodawaną przy przejściu pola START: ", True, text_color)
+        screen.blit(sgr_surface, (self.personalize_inboxes[2].x + 5, self.personalize_inboxes[2].y + 5))
+
+        self.draw_button(screen, "Gotowe", self.start_pos[0], self.start_pos[1] + self.button_size[1] * 2)
+
+        text_surface = font.render(self.personalize_settings[0], True, text_color)
+        screen.blit(text_surface, (self.personalize_inboxes[0].x + lgr_surface.get_width() * 1.1, self.personalize_inboxes[0].y + 5))  # liczba graczy
+
+        text_surface = font.render(self.personalize_settings[1], True, text_color)
+        screen.blit(text_surface, (self.personalize_inboxes[1].x + mgr_surface.get_width() * 1.05, self.personalize_inboxes[1].y + 5))  # liczba graczy
+
+        text_surface = font.render(self.personalize_settings[2], True, text_color)
+        screen.blit(text_surface, (self.personalize_inboxes[2].x + sgr_surface.get_width() * 1.05,self.personalize_inboxes[2].y + 5))  # liczba graczy
 
 
+    def handle_personalize_settings(self, event, inbox):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                self.personalize_settings[inbox] = self.personalize_settings[inbox][:-1]
+            else:
+                self.personalize_settings[inbox] = self.personalize_settings[inbox] + event.unicode

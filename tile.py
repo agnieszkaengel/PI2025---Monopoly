@@ -6,6 +6,7 @@ class Tile:
         self.width = width
         self.height = height
         self.index = index
+        self.owner = None
         if self.width<self.height:
             self.font = 0.084 * self.height
         else:

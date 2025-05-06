@@ -85,3 +85,10 @@ class Board:
         self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+9*self.tile_width+1+9, self.board_left_corner[1], 10, 20, 90)
         self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+1, self.board_left_corner[1]+self.tile_height+9*self.tile_width+1+9,20 ,30, 0)
         self.draw_one_side(screen, self.board_left_corner[0], self.board_left_corner[1] + self.tile_height + 1, 30, 40, -90)
+
+    def check_position(self, index):
+        for i, tile in enumerate(self.tiles):
+            if tile.index == index:
+                return tile.tile_type, i
+            i=i+1
+        return None
