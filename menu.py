@@ -60,6 +60,12 @@ class Menu:
         self.draw_button(screen, "Gra podstawowa", self.start_pos[0]+self.title_size, self.start_pos[1])
         self.draw_button(screen, "Gra personalizowana", self.start_pos[0] + self.title_size, self.start_pos[1]+self.button_size[1]*1.5)
 
+        image = pygame.image.load("board.png").convert_alpha()
+        im_size = self.height * 0.5
+        image = pygame.transform.scale(image, (im_size, im_size))
+        image_rect = image.get_rect(center=(self.menu_left_corner[0] + (self.width // 4), self.menu_left_corner[1]+0.38*self.menu_left_corner[1]))
+        screen.blit(image, image_rect)
+
     def draw_button(self, screen, text, x, y):
 
         pygame.draw.rect(screen, (47, 79, 79), (x, y, self.button_size[0], self.button_size[1]))

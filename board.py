@@ -85,6 +85,10 @@ class Board:
         self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+9*self.tile_width+1+9, self.board_left_corner[1], 10, 20, 90)
         self.draw_one_side(screen, self.board_left_corner[0]+self.tile_height+1, self.board_left_corner[1]+self.tile_height+9*self.tile_width+1+9,20 ,30, 0)
         self.draw_one_side(screen, self.board_left_corner[0], self.board_left_corner[1] + self.tile_height + 1, 30, 40, -90)
+        image = pygame.image.load("Monopoly.png").convert_alpha()
+        image = pygame.transform.scale(image, (self.inner_width*0.4, self.inner_width*0.2))
+        image_rect = image.get_rect(center=(self.inner_left_corner[0]+0.5*self.inner_width, self.inner_left_corner[1]+0.5*self.inner_width))
+        screen.blit(image, image_rect)
 
     def check_position(self, index):
         for i, tile in enumerate(self.tiles):
