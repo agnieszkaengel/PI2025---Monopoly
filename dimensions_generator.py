@@ -14,6 +14,8 @@ class Dimensions:
    tile_height = None
    font_size = None
    menu_width = None
+   player_menu_width = None
+   player_menu_height = None
 
 
    def get_dimensions(self):
@@ -44,8 +46,13 @@ class Dimensions:
        else:
            self.menu_width = 0.65 * self.screen_width
 
+   def calculate_player_menu_size(self):
+        self.player_menu_width = (self.screen_width-self.board_width)//2 * 0.9
+        self.player_menu_height = (self.screen_width-self.board_width)//2 * 0.9
+
    def calculate_all(self, screen):
        self.get_dimensions()
        self.calculate_board_size(screen)
        self.calculate_tile_size()
        self.calculate_menu_size()
+       self.calculate_player_menu_size()

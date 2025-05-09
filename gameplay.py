@@ -27,7 +27,8 @@ class GamePlay:
 
     def create_players(self, start_money):
         for i in range(self.players_number):
-            self.players.append(Player(self.menu.users[i][0], self.menu.users[i][1], start_money, self.board_service.start, 0))
+            self.players.append(Player(self.menu.users[i][0], self.menu.users[i][1], start_money, self.board_service.start, 0, self.dimensions))
+
 
     def run(self, screen):
         while self.running:
@@ -43,6 +44,7 @@ class GamePlay:
                     self.players_created = True
 
                 self.board_service.board.draw(screen)
+                self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
                 self.board_service.start_pos(screen)
 
                 turn_finished, was_double = self.board_service.update(screen, self.current_player_idx)
@@ -65,6 +67,7 @@ class GamePlay:
                 self.menu.personalize_game_menu(screen)#pass #menu wyboru kwoty startowej, liczby graczy, kwoty przejscia prze start
             elif self.current_state == 4:
                 self.menu.draw_nick_menu(screen, self.players_number, self.current_state)#pass #menu wyboru kwoty startowej, liczby graczy, kwoty przejscia prze start
+
             else:
                 pass
 
@@ -81,13 +84,15 @@ class GamePlay:
                     elif self.menu.buttons[3].collidepoint(event.pos) and self.current_state == 3:
                         self.current_state = 4
                         self.players_number = int(self.menu.personalize_settings[0])
-                        begin_money = int(self.menu.personalize_settings[1])
+                        self.begin_money = int(self.menu.personalize_settings[1])
                         self.board_service.start_add = int(self.menu.personalize_settings[2])
                         self.menu.create_users_list(self.players_number)
                     elif self.menu.buttons[2].collidepoint(event.pos) and self.current_state == 1:
-                        self.current_state = 2
+                        if self.menu.validate_tokens():
+                            self.current_state = 2
                     elif self.menu.buttons[2].collidepoint(event.pos) and self.current_state == 4:
-                        self.current_state = 2
+                        if self.menu.validate_tokens():
+                            self.current_state = 2
                     elif len(self.menu.nick_inboxes) > 0 and self.menu.nick_inboxes[0].collidepoint(event.pos):# and self.current_state == 1:
                         self.nick_inbox_active = 0 #nick1
                         self.player = 0

@@ -6,6 +6,7 @@ import pygame
 class BoardService:
     def __init__(self, dim:Dimensions):
         self.board = Board(dim)
+        self.dim = dim
         self.start = (self.board.board_left_corner[0] + self.board.tile_height/2, self.board.board_left_corner[1] + self.board.board_width - self.board.tile_height/2)
         self.players: list [Player] = []
         self.dice = Dice(self.board.tile_height, self.board.tile_width / 2, self.board.font_size)
@@ -125,3 +126,14 @@ class BoardService:
             return True, self.dice.is_double()
         return False, False
 
+    def draw_players_menus(self, screen, x, y):
+        for i, player in enumerate(self.players):
+            match i:
+                case 0:
+                    player.draw_player_menu(screen, x, y)
+                case 1:
+                    player.draw_player_menu(screen, x, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
+                case 2:
+                    player.draw_player_menu(screen, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y)
+                case 3:
+                    player.draw_player_menu(screen, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)

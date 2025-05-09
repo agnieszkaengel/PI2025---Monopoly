@@ -17,6 +17,7 @@ class Menu:
         self.personalize_inboxes: list[pygame.Rect] = []
         self.users = []
         self.personalize_settings = ['', '', '']
+        self.token_errors = [""] * 4
 
     def add_user (self, nick:str, pionek:str):
         self.users.append((nick, pionek))
@@ -138,6 +139,12 @@ class Menu:
         screen.blit(text_surface, (self.nick_inboxes[3].x + pionek_surface.get_width() * 1.1, self.nick_inboxes[3].y + 5))#pionek gracza 2
 
 
+        if hasattr(self, "token_errors"):
+            for i in range(playersnum):
+                if i in self.token_errors:
+                    error_surface = font.render(self.token_errors[i], True, (255, 0, 0))  # Czerwony kolor błędu
+                    screen.blit(error_surface, (self.nick_inboxes[i * 2+1].x + self.button_size[0], self.nick_inboxes[i * 2+1].y))
+
     def draw_image(self, screen, name, x, y):
         image = pygame.image.load(name).convert_alpha()
         im_size = self.height * 0.15
@@ -159,10 +166,8 @@ class Menu:
                     self.users[player] = (self.users[player][0], self.users[player][1] + event.unicode)
 
     def draw_inbox(self, screen, x, y, text, size):
-
         pygame.draw.rect(screen, (47, 79, 79), (x, y, self.button_size[0]*size, self.button_size[1]//2))
         pygame.draw.rect(screen, (0, 0, 0), (x, y, self.button_size[0]*size, self.button_size[1]//2), 3)
-        #pygame.draw.rect(screen, (0, 0, 0), (x, y, self.button_size[0], self.button_size[1] // 2), 3)
 
         text_color = (47, 79, 79)
         font = pygame.font.SysFont('Arial', int(self.text_size), True)
@@ -174,7 +179,6 @@ class Menu:
 
     def personalize_game_menu(self, screen):
         self.draw_main_part(screen, "WYBIERZ OPCJE ROZGRYWKI", False, 3)
-
         self.personalize_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.button_size[0], self.start_pos[1], "", 2))
         self.personalize_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.button_size[0], self.start_pos[1] + self.button_size[1] * 0.7, '', 2))
         self.personalize_inboxes.append(self.draw_inbox(screen, self.start_pos[0] - self.button_size[0], self.start_pos[1] + self.button_size[1] * 1.4, '', 2))
@@ -209,3 +213,21 @@ class Menu:
                 self.personalize_settings[inbox] = self.personalize_settings[inbox][:-1]
             else:
                 self.personalize_settings[inbox] = self.personalize_settings[inbox] + event.unicode
+
+    def validate_tokens(self):
+        self.token_errors = {}
+        chosen = []
+        valid = True
+
+        for i in range(len(self.users)):
+            token = self.users[i][1]
+            if not token.isdigit() or not (1 <= int(token) <= 4):
+                self.token_errors[i] = "1–4"
+                valid = False
+            elif token in chosen:
+                self.token_errors[i] = "Zajęty"
+                valid = False
+            else:
+                chosen.append(token)
+
+        return valid
