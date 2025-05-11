@@ -48,7 +48,7 @@ class Dimensions:
 
    def calculate_player_menu_size(self):
         self.player_menu_width = (self.screen_width-self.board_width)//2 * 0.9
-        self.player_menu_height = (self.screen_width-self.board_width)//2 * 0.9
+        self.player_menu_height = self.screen_height * 0.45
 
    def calculate_all(self, screen):
        self.get_dimensions()

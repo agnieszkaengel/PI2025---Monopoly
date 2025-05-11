@@ -44,15 +44,15 @@ class GamePlay:
                     self.players_created = True
 
                 self.board_service.board.draw(screen)
-                self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
+                #self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
                 self.board_service.start_pos(screen)
 
                 turn_finished, was_double = self.board_service.update(screen, self.current_player_idx)
                 self.tiles_service.tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx], event)
-                self.tiles_service.buying_finished = False
                 print(self.players[self.current_player_idx].money)
                 #obsluga pol
                 if turn_finished:
+                    self.tiles_service.buying_finished = False
                     if was_double:
                         self.double_rolls += 1
                         if self.double_rolls < 3:

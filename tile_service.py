@@ -10,14 +10,14 @@ class TileService:
         self.window_place = (board.inner_left_corner[0]+4, board.inner_left_corner[1]+4)
         self.font_size = dim.font_size*1.2
         self.button_size = (self.window_size[0]//3, self.window_size[1]//3)
-        self.buttons: list[pygame.Rect] = self.create_buttons_list()
+        self.buttons: list[pygame.Rect] = []
+        self.create_buttons_list()
+        self.buying_finished = False
 
 
     def create_buttons_list(self):
-        buttons = []
-        buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*0.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
-        buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*1.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
-        return buttons
+        self.buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*0.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
+        self.buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*1.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
 
 
     def tile_action(self, tile: Tile, screen, player: Player, event):
@@ -34,7 +34,7 @@ class TileService:
         pass
 
     def buying_window(self, screen, tile, player, event):
-        if tile.owner is None:
+        if tile.owner is None and not self.buying_finished:
             self.draw_buy_menu(screen, tile)
             self.handle_buttons(tile, player, event)
         elif tile.owner != player.name:
@@ -78,5 +78,6 @@ class TileService:
                     player.money -= tile.price
                 return True
             elif self.buttons[1].collidepoint(event.pos):
+                self.buying_finished = True
                 return False
         return None
