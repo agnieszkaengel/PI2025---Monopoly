@@ -16,6 +16,6 @@ class Player:
     def add_owned_tile(self, tile:Tile):
         self.owned_tiles.append(tile)
 
-
-
+    def highlight(self, title_to_highlight, border_color):
+        self.player_menu.highlight_tile(title_to_highlight, border_color)
 

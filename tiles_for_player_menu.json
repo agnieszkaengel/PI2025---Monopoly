@@ -1,169 +1,169 @@
 [
     {
         "name": "Ulica Konopacka",
-        "color": [139, 69, 19],
+        "color": [0,0,0],
         "index": 1,
         "column": 0
     },
     {
         "name": "Ulica Stalowa",
-        "color": [139, 69, 19],
+        "color": [0,0,0],
         "index": 3,
         "column": 0
     },
     {
         "name": "Dworzec Zachodni",
-        "color": null,
+        "color": [0,0,0],
         "index": 5,
         "column": 6
     },
     {
         "name": "Ulica Radzyminska",
-        "color": [173, 216, 230],
+        "color": [0,0,0],
         "index": 6,
         "column": 1
     },
     {
         "name": "Ulica Jagiellonska",
-        "color": [173, 216, 230],
+        "color": [0,0,0],
         "index": 8,
         "column": 1
     },
     {
         "name": "Ulica Targowa",
-        "color": [173, 216, 230],
+        "color": [0,0,0],
         "index": 9,
         "column": 1
     },
     {
         "name": "Ulica Plowiecka",
-        "color": [255, 0, 255],
+        "color": [0,0,0],
         "index": 11,
         "column": 2
     },
     {
         "name": "Elektrownia",
-        "color": null,
+        "color": [0,0,0],
         "index": 12,
         "column": 9
     },
     {
         "name": "Ulica Marsa",
-        "color": [255, 0, 255],
+        "color": [0,0,0],
         "index": 13,
         "column": 2
     },
     {
         "name": "Ulica Grochowska",
-        "color": [255, 0, 255],
+        "color": [0,0,0],
         "index": 14,
         "column": 2
     },
     {
         "name": "Dworzec Gdanski",
-        "color": null,
+        "color": [0,0,0],
         "index": 15,
         "column": 6
     },
     {
         "name": "Ulica Obozowa",
-        "color": [255, 140, 0],
+        "color": [0,0,0],
         "index": 16,
         "column": 3
     },
     {
         "name": "Ulica Gorczewska",
-        "color": [255, 140, 0],
+        "color": [0,0,0],
         "index": 18,
         "column": 3
     },
     {
         "name": "Ulica Wolska",
-        "color": [255, 140, 0],
+        "color": [0,0,0],
         "index": 19,
         "column": 3
     },
     {
         "name": "Ulica Mickiewicza",
-        "color": [255, 0, 0],
+        "color": [0,0,0],
         "index": 21,
         "column": 4
     },
     {
         "name": "Ulica Slowackiego",
-        "color": [255, 0, 0],
+        "color": [0,0,0],
         "index": 23,
         "column": 4
     },
     {
         "name": "Ulica Wilsona",
-        "color": [255, 0, 0],
+        "color": [0,0,0],
         "index": 24,
         "column": 4
     },
     {
         "name": "Dworzec Wschodni",
-        "color": null,
+        "color": [0,0,0],
         "index": 25,
         "column": 6
     },
     {
         "name": "Ulica Swietokrzyska",
-        "color": [255, 255, 0],
+        "color": [0,0,0],
         "index": 26,
         "column": 5
     },
     {
         "name": "Krakowskie Przedmiescie",
-        "color": [255, 255, 0],
+        "color": [0,0,0],
         "index": 27,
         "column": 5
     },
     {
         "name": "Wodociagi",
-        "color": null,
+        "color": [0,0,0],
         "index": 28,
         "column": 9
     },
     {
         "name": "Nowy Swiat",
-        "color": [255, 255, 0],
+        "color": [0,0,0],
         "index": 29,
         "column": 5
     },
     {
         "name": "Plac Krzyzy",
-        "color": [0, 128, 0],
+        "color": [0,0,0],
         "index": 31,
         "column": 7
     },
     {
         "name": "Ulica Marszalkowska",
-        "color": [0, 128, 0],
+        "color": [0,0,0],
         "index": 32,
         "column": 7
     },
     {
         "name": "Aleje Jerozolimskie",
-        "color": [0, 128, 0],
+        "color": [0,0,0],
         "index": 34,
         "column": 7
     },
     {
         "name": "Dworzec Centralny",
-        "color": null,
+        "color": [0,0,0],
         "index": 35,
         "column": 6
     },
     {
         "name": "Ulica Belwederska",
-        "color": [0, 0, 128],
+        "color": [0,0,0],
         "index": 37,
         "column": 8
     },
     {
         "name": "Aleje Ujazdowskie",
-        "color": [0, 0, 128],
+        "color": [0,0,0],
         "index": 39,
         "column": 8
     }

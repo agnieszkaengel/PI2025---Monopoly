@@ -24,6 +24,7 @@ class GamePlay:
         self.current_player_idx = 0
         self.double_rolls = 0
         self.begin_money = 1500
+        self.last_event = None
 
     def create_players(self, start_money):
         for i in range(self.players_number):
@@ -44,15 +45,22 @@ class GamePlay:
                     self.players_created = True
 
                 self.board_service.board.draw(screen)
-                #self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
+                self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
                 self.board_service.start_pos(screen)
 
                 turn_finished, was_double = self.board_service.update(screen, self.current_player_idx)
-                self.tiles_service.tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx], event)
+                is_bought = self.tiles_service.tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx], self.last_event)
+
+               # if is_bought:
+                #    tile = self.board_service.board.tiles[self.board_service.list_number]
+                 #   print(tile.color)
+                  #  self.players[self.current_player_idx].player_menu.highlight_tile(tile.name, tile.color)
+
                 print(self.players[self.current_player_idx].money)
                 #obsluga pol
                 if turn_finished:
                     self.tiles_service.buying_finished = False
+                    self.tiles_service.rent_finished = False
                     if was_double:
                         self.double_rolls += 1
                         if self.double_rolls < 3:
@@ -72,6 +80,7 @@ class GamePlay:
                 pass
 
             for event in pygame.event.get():
+                self.last_event = event
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:

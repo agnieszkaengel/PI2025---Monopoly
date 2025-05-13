@@ -137,3 +137,4 @@ class BoardService:
                     player.player_menu.draw_player_menu(screen, player.name, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y)
                 case 3:
                     player.player_menu.draw_player_menu(screen, player.name, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
+

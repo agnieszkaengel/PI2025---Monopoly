@@ -5,7 +5,7 @@
         "tile_type": "Street",
         "color": [255, 0, 255],
         "price": 140,
-        "rent": null,
+        "rent": 10,
         "index": 11
     },
     {
@@ -21,7 +21,7 @@
         "tile_type": "Street",
         "color": [255, 0, 255],
         "price": 140,
-        "rent": null,
+        "rent": 10,
         "index": 13
     },
     {
@@ -29,14 +29,14 @@
         "tile_type": "Street",
         "color": [255, 0, 255],
         "price": 160,
-        "rent": null,
+        "rent": 12,
         "index": 14
     },
     {
         "name": "Dworzec Gdanski",
         "tile_type": "Station",
         "price": 200,
-        "rent": null,
+        "rent": 25,
         "image": "Train.png",
         "index": 15
     },
@@ -45,7 +45,7 @@
         "tile_type": "Street",
         "color": [255, 140, 0],
         "price": 180,
-        "rent": null,
+        "rent": 14,
         "index": 16
     },
     {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png", "index": 17},
@@ -54,7 +54,7 @@
         "tile_type": "Street",
         "color": [255, 140, 0],
         "price": 180,
-        "rent": null,
+        "rent": 14,
         "index": 18
     },
     {
@@ -62,7 +62,7 @@
         "tile_type": "Street",
         "color": [255, 140, 0],
         "price": 200,
-        "rent": null,
+        "rent": 16,
         "index": 19
     },
     {"name": "PARKING", "tile_type": "Action", "image": "parking.png", "index": 20},
@@ -71,7 +71,7 @@
         "tile_type": "Street",
         "color": [255, 0, 0],
         "price": 220,
-        "rent": null,
+        "rent": 18,
         "index": 21
     },
     {"name": "Szansa", "tile_type": "Action", "image": "chance.png", "index": 22},
@@ -80,7 +80,7 @@
         "tile_type": "Street",
         "color": [255, 0, 0],
         "price": 220,
-        "rent": null,
+        "rent": 18,
         "index": 23
     },
     {
@@ -88,14 +88,14 @@
         "tile_type": "Street",
         "color": [255, 0, 0],
         "price": 240,
-        "rent": null,
+        "rent": 20,
         "index": 24
     },
     {
         "name": "Dworzec Wschodni",
         "tile_type": "Station",
         "price": 200,
-        "rent": null,
+        "rent": 25,
         "image": "Train.png",
         "index": 25
     },
@@ -104,7 +104,7 @@
         "tile_type": "Street",
         "color": [255, 255, 0],
         "price": 260,
-        "rent": null,
+        "rent": 22,
         "index": 26
     },
     {
@@ -112,7 +112,7 @@
         "tile_type": "Street",
         "color": [255, 255, 0],
         "price": 60,
-        "rent": null,
+        "rent": 22,
         "index": 27
     },
     {
@@ -128,7 +128,7 @@
         "tile_type": "Street",
         "color": [255, 255, 0],
         "price": 280,
-        "rent": null,
+        "rent": 24,
         "index": 29
     },
     {
@@ -136,7 +136,7 @@
         "tile_type": "Street",
         "color": [0, 0, 128],
         "price": 400,
-        "rent": null,
+        "rent": 50,
         "index": 39
     },
     {"name": "Domiar Podatkowy", "tile_type": "Action", "image": "ring.png", "index": 38},
@@ -145,7 +145,7 @@
         "tile_type": "Street",
         "color": [0, 0, 128],
         "price": 350,
-        "rent": null,
+        "rent": 35,
         "index": 37
     },
     {"name": "Szansa", "tile_type": "Action", "image": "chance.png", "index": 36},
@@ -153,7 +153,7 @@
         "name": "Dworzec Centralny",
         "tile_type": "Station",
         "price": 200,
-        "rent": null,
+        "rent": 25,
         "image": "Train.png",
         "index": 35
     },
@@ -162,7 +162,7 @@
         "tile_type": "Street",
         "color": [0, 128, 0],
         "price": 320,
-        "rent": null,
+        "rent": 28,
         "index": 34
     },
     {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png", "index": 33},
@@ -171,7 +171,7 @@
         "tile_type": "Street",
         "color": [0, 128, 0],
         "price": 300,
-        "rent": null,
+        "rent": 26,
         "index": 32
     },
     {
@@ -179,7 +179,7 @@
         "tile_type": "Street",
         "color": [0, 128, 0],
         "price": 300,
-        "rent": null,
+        "rent": 26,
         "index": 31
     },
     {"name": "IDZ DO WIEZIENIA", "tile_type": "Action", "image": "police.png", "index": 30},
@@ -188,7 +188,7 @@
         "tile_type": "Street",
         "color": [173, 216, 230],
         "price": 300,
-        "rent": null,
+        "rent": 8,
         "index": 9
     },
     {
@@ -196,7 +196,7 @@
         "tile_type": "Street",
         "color": [173, 216, 230],
         "price": 300,
-        "rent": null,
+        "rent": 6,
         "index": 8
     },
     {"name": "Szansa", "tile_type": "Action", "image": "chance.png", "index": 7},
@@ -205,14 +205,14 @@
         "tile_type": "Street",
         "color": [173, 216, 230],
         "price": 100,
-        "rent": null,
+        "rent": 6,
         "index": 6
     },
     {
         "name": "Dworzec Zachodni",
         "tile_type": "Station",
         "price": 200,
-        "rent": null,
+        "rent": 25,
         "image": "Train.png",
         "index": 5
     },
@@ -222,7 +222,7 @@
         "tile_type": "Street",
         "color": [139, 69, 19],
         "price": 60,
-        "rent": null,
+        "rent": 4,
         "index": 3
     },
     {"name": "Kasa Spoleczna", "tile_type": "Action", "image": "treasure.png", "index": 2},
@@ -231,7 +231,7 @@
         "tile_type": "Street",
         "color": [139, 69, 19],
         "price": 300,
-        "rent": null,
+        "rent": 2,
         "index": 1
     },
     {"name": "START", "tile_type": "Action", "image": "start.png", "index": 0}

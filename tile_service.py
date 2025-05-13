@@ -13,19 +13,25 @@ class TileService:
         self.buttons: list[pygame.Rect] = []
         self.create_buttons_list()
         self.buying_finished = False
+        self.rent_finished = False
 
 
     def create_buttons_list(self):
         self.buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*0.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
         self.buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*1.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
-
+        self.buttons.append(pygame.Rect(self.window_place[0] + self.button_size[0] * 0.5 * 1.5,
+                                        self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.5,
+                                        self.button_size[1]))
+        self.buttons.append(pygame.Rect(self.window_place[0] + self.button_size[0] * 1.5 * 1.5,
+                                        self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.5,
+                                        self.button_size[1]))
 
     def tile_action(self, tile: Tile, screen, player: Player, event):
             match tile.tile_type:
                 case "Action":
                     pass
                 case "Station" | "Street":
-                    self.buying_window(screen, tile, player, event)
+                    return self.buying_window(screen, tile, player, event)
 
     def street_service(self):
         pass
@@ -36,18 +42,21 @@ class TileService:
     def buying_window(self, screen, tile, player, event):
         if tile.owner is None and not self.buying_finished:
             self.draw_buy_menu(screen, tile)
-            self.handle_buttons(tile, player, event)
-        elif tile.owner != player.name:
-            print("Musisz zapłacić czynsz graczowi:", tile.owner)
-            print("Wartość:", tile.rent)
+            return self.handle_buttons(tile, player, event)
+        elif tile.owner is not None and tile.owner != player.name:
+            self.draw_rent_menu(screen, tile)
+            self.handle_buttons2(tile, player, event)
+            return False
         else:
-            pass
+            return False
+
+
 
     def draw_buy_menu(self, screen, tile):
         pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
         pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
         text1 = "Czy chcesz kupić nieruchomość: " + tile.name + "?"
-        text2 = "KOSZT NIERUCHOMOSCI: " + str(tile.price) + "ZŁ"
+        text2 = "KOSZT NIERUCHOMOSCI: " + str(tile.price) + " ZŁ" + "  POBIERANY CZYNSZ: " + str(tile.rent) + " ZŁ"
 
         font = pygame.font.SysFont('Arial', int(self.font_size), True)
         text_color = (0, 0, 0)
@@ -76,8 +85,44 @@ class TileService:
                 if tile.owner is None and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
-                return True
+                    return True
             elif self.buttons[1].collidepoint(event.pos):
                 self.buying_finished = True
                 return False
+
+
+    def draw_rent_menu(self, screen, tile):
+        pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
+        pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
+        text1 = "Musisz opłacić czynsz graczowi: " + tile.owner
+        text2 = "WYSOKOŚĆ CZYNSZU " + str(tile.rent) + " ZŁ"
+        font = pygame.font.SysFont('Arial', int(self.font_size), True)
+        text_color = (0, 0, 0)
+        text1 = font.render(str(text1), True, text_color)
+        text2 = font.render(str(text2), True, text_color)
+        text_rect = text1.get_rect(center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1))
+        screen.blit(text1, text_rect)
+        text_rect = text2.get_rect(center=(self.window_place[0] + self.window_size[0] // 2,self.window_place[1] + self.window_size[1] * 0.1 + self.font_size * 2))
+        screen.blit(text2, text_rect)
+
+        pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0] + self.button_size[0] * 0.5 * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.5, self.button_size[1]))
+        text_tak = font.render('OPŁAĆ GOTÓWKĄ', True, (0, 0, 0))
+        text_tak_rect = text_tak.get_rect(center=self.buttons[0].center)
+
+        pygame.draw.rect(screen, (200, 100, 100), (
+        self.window_place[0] + self.button_size[0] * 1.5 * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.5, self.button_size[1]))
+        text_nie = font.render('ZASTAW NIERUCHOMOŚĆ', True, (0, 0, 0))
+        text_nie_rect = text_nie.get_rect(center=self.buttons[1].center)
+
+        screen.blit(text_tak, text_tak_rect)
+        screen.blit(text_nie, text_nie_rect)
+
+    def handle_buttons2(self, tile, player, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.buttons[2].collidepoint(event.pos):
+                if player.money >= int(tile.rent):
+                    player.money -= int(tile.rent)
+                return True
+            elif self.buttons[3].collidepoint(event.pos):
+                self.rent_finished = True
         return None
