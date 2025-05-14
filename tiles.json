@@ -12,7 +12,7 @@
         "name": "Elektrownia",
         "tile_type": "Station",
         "price": 150,
-        "rent": null,
+        "rent": 25,
         "image": "bulb.png",
         "index": 12
     },
@@ -119,7 +119,7 @@
         "name": "Wodociagi",
         "tile_type": "Station",
         "price": 150,
-        "rent": null,
+        "rent": 25,
         "image": "tap.png",
         "index": 28
     },

@@ -4,11 +4,11 @@ from player import Player
 from dimensions_generator import Dimensions
 import pygame
 class BoardService:
-    def __init__(self, dim:Dimensions):
+    def __init__(self, dim:Dimensions, players):
         self.board = Board(dim)
         self.dim = dim
         self.start = (self.board.board_left_corner[0] + self.board.tile_height/2, self.board.board_left_corner[1] + self.board.board_width - self.board.tile_height/2)
-        self.players: list [Player] = []
+        self.players = players#: list [Player] = []
         self.dice = Dice(self.board.tile_height, self.board.tile_width / 2, self.board.font_size)
         self.pending_move = False
         self.list_number = 0
@@ -130,11 +130,11 @@ class BoardService:
         for i, player in enumerate(self.players):
             match i:
                 case 0:
-                    player.player_menu.draw_player_menu(screen, player.name, x, y)
+                    player.player_menu.draw_player_menu(screen, player.name, player.money, x, y)
                 case 1:
-                    player.player_menu.draw_player_menu(screen, player.name, x, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
+                    player.player_menu.draw_player_menu(screen, player.name, player.money, x, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
                 case 2:
-                    player.player_menu.draw_player_menu(screen, player.name, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y)
+                    player.player_menu.draw_player_menu(screen, player.name, player.money, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y)
                 case 3:
-                    player.player_menu.draw_player_menu(screen, player.name, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
+                    player.player_menu.draw_player_menu(screen, player.name, player.money, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
 

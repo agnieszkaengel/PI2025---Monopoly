@@ -10,9 +10,7 @@ from tile_service import TileService
 class GamePlay:
     def __init__(self, screen, running):
         self.dimensions = Dimensions(screen)
-        self.board_service = BoardService(self.dimensions)
         self.menu = Menu(self.dimensions)
-        self.tiles_service = TileService(self.board_service.board, self.dimensions)
         self.current_state = 0
         self.nick_inbox_active = 100
         self.choice_inbox_active = 100 #0 - liczba graczy, 1 - majątek pocz, 2 - kwota przy start
@@ -21,10 +19,12 @@ class GamePlay:
         self.player = ''
         self.players_created = False
         self.players: list [Player] = []
+        self.board_service = BoardService(self.dimensions, self.players)
+        self.tiles_service = TileService(self.board_service.board, self.dimensions)
         self.current_player_idx = 0
         self.double_rolls = 0
         self.begin_money = 1500
-        self.last_event = None
+        #self.last_event = None
 
     def create_players(self, start_money):
         for i in range(self.players_number):
@@ -47,14 +47,17 @@ class GamePlay:
                 self.board_service.board.draw(screen)
                 self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
                 self.board_service.start_pos(screen)
-
+                print(self.players[self.current_player_idx].name)
                 turn_finished, was_double = self.board_service.update(screen, self.current_player_idx)
-                is_bought = self.tiles_service.tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx], self.last_event)
-
-               # if is_bought:
-                #    tile = self.board_service.board.tiles[self.board_service.list_number]
-                 #   print(tile.color)
-                  #  self.players[self.current_player_idx].player_menu.highlight_tile(tile.name, tile.color)
+                print(self.players[self.current_player_idx].name)
+                is_bought = self.tiles_service.tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx], event)
+                print(turn_finished, is_bought)
+                if is_bought:
+                    tile = self.board_service.board.tiles[self.board_service.list_number]
+                    color = getattr(tile, "color", (128, 128, 128))
+                    # print(tile.color)
+                    print(self.players[self.current_player_idx].name)
+                    self.board_service.players[self.current_player_idx].player_menu.highlight_tile(tile.name, color)
 
                 print(self.players[self.current_player_idx].money)
                 #obsluga pol
@@ -80,7 +83,7 @@ class GamePlay:
                 pass
 
             for event in pygame.event.get():
-                self.last_event = event
+                #self.last_event = event
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:

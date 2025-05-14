@@ -41,7 +41,7 @@ class TileService:
 
     def buying_window(self, screen, tile, player, event):
         if tile.owner is None and not self.buying_finished:
-            self.draw_buy_menu(screen, tile)
+            self.draw_buy_menu(screen, tile, player.name)
             return self.handle_buttons(tile, player, event)
         elif tile.owner is not None and tile.owner != player.name:
             self.draw_rent_menu(screen, tile)
@@ -52,10 +52,10 @@ class TileService:
 
 
 
-    def draw_buy_menu(self, screen, tile):
+    def draw_buy_menu(self, screen, tile, name):
         pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
         pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
-        text1 = "Czy chcesz kupić nieruchomość: " + tile.name + "?"
+        text1 = name + ": Czy chcesz kupić nieruchomość: " + tile.name + "?"
         text2 = "KOSZT NIERUCHOMOSCI: " + str(tile.price) + " ZŁ" + "  POBIERANY CZYNSZ: " + str(tile.rent) + " ZŁ"
 
         font = pygame.font.SysFont('Arial', int(self.font_size), True)
@@ -105,12 +105,12 @@ class TileService:
         text_rect = text2.get_rect(center=(self.window_place[0] + self.window_size[0] // 2,self.window_place[1] + self.window_size[1] * 0.1 + self.font_size * 2))
         screen.blit(text2, text_rect)
 
-        pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0] + self.button_size[0] * 0.5 * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.5, self.button_size[1]))
+        pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0] + self.button_size[0] * 0.01, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.2, self.button_size[1]))
         text_tak = font.render('OPŁAĆ GOTÓWKĄ', True, (0, 0, 0))
         text_tak_rect = text_tak.get_rect(center=self.buttons[0].center)
 
         pygame.draw.rect(screen, (200, 100, 100), (
-        self.window_place[0] + self.button_size[0] * 1.5 * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.5, self.button_size[1]))
+        self.window_place[0] + self.button_size[0] * 1.21, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.2, self.button_size[1]))
         text_nie = font.render('ZASTAW NIERUCHOMOŚĆ', True, (0, 0, 0))
         text_nie_rect = text_nie.get_rect(center=self.buttons[1].center)
 
