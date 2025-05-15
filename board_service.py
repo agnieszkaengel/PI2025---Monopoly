@@ -8,7 +8,7 @@ class BoardService:
         self.board = Board(dim)
         self.dim = dim
         self.start = (self.board.board_left_corner[0] + self.board.tile_height/2, self.board.board_left_corner[1] + self.board.board_width - self.board.tile_height/2)
-        self.players = players#: list [Player] = []
+        self.players: list [Player] = [] #players
         self.dice = Dice(self.board.tile_height, self.board.tile_width / 2, self.board.font_size)
         self.pending_move = False
         self.list_number = 0

@@ -5,8 +5,6 @@ from menu import Menu
 from player import Player
 from tile_service import TileService
 
-
-
 class GamePlay:
     def __init__(self, screen, running):
         self.dimensions = Dimensions(screen)
@@ -47,20 +45,15 @@ class GamePlay:
                 self.board_service.board.draw(screen)
                 self.board_service.draw_players_menus(screen, (self.dimensions.screen_width-self.dimensions.board_width)//2 * 0.05, self.dimensions.screen_height//2 * 0.025)
                 self.board_service.start_pos(screen)
-                print(self.players[self.current_player_idx].name)
                 turn_finished, was_double = self.board_service.update(screen, self.current_player_idx)
-                print(self.players[self.current_player_idx].name)
+             
                 is_bought = self.tiles_service.tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx], event)
-                print(turn_finished, is_bought)
+              
                 if is_bought:
                     tile = self.board_service.board.tiles[self.board_service.list_number]
                     color = getattr(tile, "color", (128, 128, 128))
-                    # print(tile.color)
-                    print(self.players[self.current_player_idx].name)
                     self.board_service.players[self.current_player_idx].player_menu.highlight_tile(tile.name, color)
 
-                print(self.players[self.current_player_idx].money)
-                #obsluga pol
                 if turn_finished:
                     self.tiles_service.buying_finished = False
                     self.tiles_service.rent_finished = False
