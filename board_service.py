@@ -2,17 +2,21 @@ from board import Board
 from dice import Dice
 from player import Player
 from dimensions_generator import Dimensions
+from players_singleton import PlayersSingleton
 import pygame
 class BoardService:
-    def __init__(self, dim:Dimensions, players):
+    def __init__(self, dim:Dimensions):
         self.board = Board(dim)
         self.dim = dim
         self.start = (self.board.board_left_corner[0] + self.board.tile_height/2, self.board.board_left_corner[1] + self.board.board_width - self.board.tile_height/2)
-        self.players: list [Player] = [] #players
+        self.players_singleton = PlayersSingleton()
+        self.players = self.players_singleton.players
         self.dice = Dice(self.board.tile_height, self.board.tile_width / 2, self.board.font_size)
         self.pending_move = False
         self.list_number = 0
         self.start_add = 200
+        print(id(self.players_singleton))
+        print(id(self.players))
 
     def start_pos(self, screen):
         for player in self.players:
@@ -30,7 +34,7 @@ class BoardService:
 
     def try_change_pos(self, idx):
         previous_tile_index = self.players[idx].tile_index
-        if self.pending_move and not self.dice.showing_dice:
+        if self.pending_move: #and not self.dice.showing_dice:
             suma = self.dice.get_sum()
             x, y = self.players[idx].position
 
@@ -106,21 +110,27 @@ class BoardService:
             if previous_tile_index > new_index:
                 self.players[idx].money += self.start_add
             self.players[idx].tile_index = new_index
-            print(self.players[idx].tile_index)
+
 
             tile_type, number = self.board.check_position(self.players[idx].tile_index)
             self.list_number = number
 
-            print(tile_type)
+
 
             self.pending_move = False
             return True
+        return False
+
+    def draw_button(self, screen):
+        x = self.board.inner_left_corner[0] + self.board.inner_width - self.dice.button_size[0]
+        y = self.board.inner_left_corner[1] + self.board.inner_width - self.dice.button_size[1]
+        self.dice.draw_button(screen, x, y)
 
     def update(self, screen, idx):
         button_x = self.board.inner_left_corner[0] + self.board.inner_width - self.dice.button_size[0]
         button_y = self.board.inner_left_corner[1] + self.board.inner_width - self.dice.button_size[1]
 
-        self.dice.draw_button(screen, button_x, button_y)
+        #self.dice.draw_button(screen, button_x, button_y)
         self.dice.update(screen, button_x, button_y)
         if self.try_change_pos(idx):
             return True, self.dice.is_double()

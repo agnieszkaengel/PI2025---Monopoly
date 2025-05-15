@@ -19,3 +19,6 @@ class Player:
     def highlight(self, title_to_highlight, border_color):
         self.player_menu.highlight_tile(title_to_highlight, border_color)
 
+    def __repr__(self):
+        return f"Player(name={self.name}, figure={self.figure})"
+

@@ -15,6 +15,8 @@ class Dice:
                 self.random_number()
                 self.show_start_time = time.time()
                 self.showing_dice = True
+                return True
+        return False
 
     def draw_button (self, screen, x, y):
             pygame.draw.rect(screen, (193, 225, 193), (x, y, self.button_size[0], self.button_size[1]))
@@ -45,8 +47,8 @@ class Dice:
             image2 = pygame.image.load(name2).convert_alpha()
             image2 = pygame.transform.scale(image2, (self.dice_size, self.dice_size))
 
-            image_rect1 = image1.get_rect(center=(x+self.dice_size//2, y))
-            image_rect2 = image2.get_rect(center=(x + self.dice_size*1.5, y))
+            image_rect1 = image1.get_rect(center=(x+self.dice_size//2, y-self.button_size[1]))
+            image_rect2 = image2.get_rect(center=(x + self.dice_size*1.5, y-self.button_size[1]))
 
             screen.blit(image1, image_rect1)
             screen.blit(image2, image_rect2)
@@ -54,7 +56,7 @@ class Dice:
     def update(self, screen, x, y):
         if self.showing_dice:
             current_time = time.time()
-            if current_time - self.show_start_time <= 3:
+            if current_time - self.show_start_time <= 5:
                 pygame.draw.rect(screen, (200, 220, 200), (x, y, self.button_size[0], self.button_size[1]))  # wyczyść tło
                 self.show_dice(screen, x, y)
             else:
