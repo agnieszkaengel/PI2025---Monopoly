@@ -16,35 +16,83 @@ class GameState(Enum):
     CUSTOMIZE_PLAYERS = 4
 
 class GamePlay:
+    """
+    Klasa odpowiada za logikę i pętlę główną rozgrywki oraz przechowywanie jej  parametrów.
+    """
     def __init__(self, screen, running):
+        """
+        Inizjalizuje obiekt GamePlay przypisując wszystkie niezbędne atrybuty.
+        :param screen: płaszczyzna ekranu
+        :param running: Flaga kontrolująca, czy gra jest w toku.
+                        - True: Gra jest aktywna i działa.
+                        - False: Gra została zakończona.
+        """
         self.dimensions = Dimensions(screen)
+        """Obiekt klasy Dimensions przechowujący dynamicznie wyliczone wymiary poszczególnych elementów rozgrywki"""
         self.menu = Menu(self.dimensions)
+        """Obiekt klasy Menu odpowiadający za funkcjonalności menu"""
         self.current_state = 0
+        """Przechowuje aktualny stan, w którym znajduje się rozgrywka"""
         self.nick_inbox_active = None
+        """Przechowuje indeks aktywnego do wpisywania danych okna w menu podawania nicków"""
         self.choice_inbox_active = None #0 - liczba graczy, 1 - majątek pocz, 2 - kwota przy start
+        """Przechowuje indeks aktywnego do wpisywania danych okna w menu personalizowanej rozgrywki"""
         self.players_number = 0
+        """Przechowuje liczbę graczy uczestniczących w rozgrywce"""
         self.running = running
+        """Przechowuje flagę kontorlującą"""
         self.player = ''
         self.players_created = False
+        """Flaga przechowująca informację czy lista graczy została już utworzona
+                        - True: Lista została utworzona.
+                        - False: Lista nie została utworzona."""
         self.players_singleton = PlayersSingleton()
+        """Pole inicjalizujące instancję singletona"""
         self.players = self.players_singleton.players
+        """Pole przechowujące """
         self.board_service = BoardService(self.dimensions)
+        """Obiekt klasy BoardService odpowiadający za obsługę planszy."""
         self.tiles_service = TileService(self.board_service.board, self.dimensions)
+        """Obiekt klasy TilesService odpowiadający za obsługę pól."""
         self.current_player_idx = 0
+        """Przechowuje indeks gracza z aktualnie aktywną kolejką."""
         self.double_rolls = 0
+        """Przechowuje licznik wyrzuconych dubletów w danej kolejce."""
         self.begin_money = 1500
+        """Przechowuje wartość majątku początowego graczy: domyślnie 1500."""
         self.screen = None
+        """Przechowuje płaszczyznę ekranu."""
         self.turn_active = False
+        """Flaga oznaczająca czy tura jest aktywna.
+                        - True: tura aktywna.
+                        - False: tura nieaktywna"""
         self.tile_action_finished = None
+        """Flaga oznaczająca czy akcja dotycząca pola, na którym zatrzymał się pionek zostałą zakończona.
+                        - True: akcja zakończona
+                        - False: akcja niezakończona"""
         self.move_made = False
+        """Flaga oznaczająca czy ruch pionka został wykonany.
+                        - True: wykonany
+                        - Flase: niewykonany"""
 
     def create_players(self, start_money):
+        """
+        Funkcja dodaje graczy do listy graczy.
+        :param start_money: Kwota początkowa majątku graczy.
+        :return: None
+        """
         self.players_singleton.clear_players()
         for i in range(self.players_number):
             player = Player(self.menu.users[i][0], self.menu.users[i][1], start_money, self.board_service.start, 0, self.dimensions)
             self.players_singleton.add_player(player)
 
-    def handle_events(self, event):
+    def handle_events(self, event, screen):
+        """
+        Funkcja rozpoznaje rodzaj eventu i wywołuje odpowiednią funkcję obsługującą ten rodzaj lub zamyka program w przypadku kliknięcia klawisza Q.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :param screen: płaszczyzna ekranu
+        :return: None
+        """
         if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
             self.running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -53,6 +101,11 @@ class GamePlay:
             self.handle_text_input(event)
 
     def handle_mouse_click(self, event):
+        """
+        Funkcja obsługuje kliknięcia myszką podczas różnych stanów gry i wywołuje odpowiednią funkcję do stanu, w którym się znajduje.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :return: None
+        """
         if self.current_state == GameState.MAIN_MENU.value:
             self.handle_main_menu_click(event)
         elif self.current_state == GameState.NICKNAME_MENU.value:
@@ -65,6 +118,11 @@ class GamePlay:
             self.handle_gameplay_click(event)
 
     def handle_main_menu_click(self, event):
+        """
+        Funkcja obsługuje kliknięcia myszką na ekranie głównego menu.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :return: None
+        """
         if self.menu.buttons[0].collidepoint(event.pos):
             self.current_state = GameState.NICKNAME_MENU.value
             self.players_number = 2
@@ -78,6 +136,11 @@ class GamePlay:
             self.check_inbox_click(event)
 
     def handle_personalize_menu_click(self, event):
+        """
+        Funkcja obsługuje kliknięcia myszką na ekranie menu personalizowanej rozgrywki.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :return: None
+        """
         if self.menu.buttons[3].collidepoint(event.pos):
             self.players_number = int(self.menu.personalize_settings[0])
             self.begin_money = int(self.menu.personalize_settings[1])
@@ -87,6 +150,11 @@ class GamePlay:
             self.check_inbox_click(event)
 
     def check_inbox_click(self, event):
+        """
+        Funkcja sprawdza, które pole do wprowadzania danych zostało kliknięte i aktywuje je.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :return: None
+        """
         if self.current_state == GameState.NICKNAME_MENU.value or self.current_state == GameState.CUSTOMIZE_PLAYERS.value:
             for i, inbox in enumerate(self.menu.nick_inboxes):
                 if inbox.collidepoint(event.pos):
@@ -100,6 +168,11 @@ class GamePlay:
                     return
 
     def handle_text_input(self, event):
+        """
+        Funkcja obsługuje wprowadzane przez użytkownika dane tekstowe.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :return: None
+        """
         if self.current_state == GameState.NICKNAME_MENU.value or self.current_state == GameState.CUSTOMIZE_PLAYERS.value:
             if self.nick_inbox_active is not None:
                 self.menu.handle_event(event, self.nick_inbox_active, self.player)
@@ -108,6 +181,11 @@ class GamePlay:
                 self.menu.handle_personalize_settings(event, self.choice_inbox_active)
 
     def handle_gameplay_click(self, event):
+        """
+        Funkcja obsługuje kliknięcia myszką podczas rozgrywki.
+        :param event: zdarzenie przechwycone w pętli głównej
+        :return: None
+        """
         #self.board_service.handle_click(event)
         if self.board_service.dice.click(event):
             x = self.board_service.board.inner_left_corner[0] + self.board_service.board.inner_width - self.board_service.dice.button_size[0]
@@ -115,12 +193,42 @@ class GamePlay:
             self.board_service.dice.update(self.screen, x, y)
             self.board_service.pending_move = True
             self.turn_active = True
-        elif self.tiles_service.handle_buttons(self.board_service.board.tiles[self.board_service.list_number], self.players[self.current_player_idx], event):
-            self.tile_action_finished = True
-        elif self.tiles_service.handle_buttons2(self.board_service.board.tiles[self.board_service.list_number], self.players[self.current_player_idx], event):
-            self.tile_action_finished = True
+        else:
+            handled, flag = self.tiles_service.handle_buttons(self.board_service.board.tiles[self.board_service.list_number], self.players[self.current_player_idx], event)
+            if handled:
+                match flag:
+                    case 0:
+                        pass
+                    case 1:
+                        idx = self.players_singleton.get_player_index(self.board_service.board.tiles[self.board_service.list_number].owner)
+                        self.players[idx].money += self.board_service.board.tiles[self.board_service.list_number].rent
+                self.tile_action_finished = True
+
+
+    def prison_check(self):
+        if self.players[self.current_player_idx].in_prison:
+            self.players[self.current_player_idx].waiting_count += 1
+            if self.players[self.current_player_idx].waiting_count >= 3:
+                self.players[self.current_player_idx].in_prison = False
+                self.players[self.current_player_idx].waiting_count = 0
+            self.next_turn()
+            return
+
+    def parking_check(self):
+        if self.players[self.current_player_idx].in_parking:
+            self.players[self.current_player_idx].waiting_count += 1
+            if self.players[self.current_player_idx].waiting_count >= 1:
+                self.players[self.current_player_idx].in_parking = False
+                self.players[self.current_player_idx].waiting_count = 0
+            self.next_turn()
+            return
 
     def update_gameplay(self, screen):
+        """
+        Funkcja aktualizuje stan rozgrywki przy każdym obrocie pętli głównej.
+        :param screen: płaszczyzna ekranu
+        :return: None
+        """
         if not self.players_created:
             self.create_players(self.begin_money)
             self.board_service.players = self.players
@@ -131,9 +239,16 @@ class GamePlay:
         self.board_service.start_pos(screen)
         self.board_service.draw_button(screen)
 
+        self.prison_check()
+        self.parking_check()
+
         if self.turn_active:
+
             self.move_made = self.board_service.try_change_pos(self.current_player_idx)
             is_possibility = self.tiles_service.draw_tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx])
+
+            if self.players[self.current_player_idx].in_prison and self.players[self.current_player_idx].tile_index != 10:
+                self.board_service.move_to_prison(self.current_player_idx)
 
             if is_possibility and not self.tile_action_finished: return
             if not is_possibility: self.tile_action_finished = True
@@ -151,19 +266,30 @@ class GamePlay:
                     self.double_rolls += 1
                     if self.double_rolls < 3:
                         pass
+                    if self.double_rolls == 3:
+                        self.board_service.move_to_prison(self.current_player_idx)
                 else:
                     self.double_rolls = 0
-                    self.current_player_idx = (self.current_player_idx + 1) % self.players_number
-                    self.turn_active = False
-                    self.tile_action_finished = False
+                    self.next_turn()
+
+
+    def next_turn(self):
+        self.current_player_idx = (self.current_player_idx + 1) % self.players_number
+        self.turn_active = False
+        self.tile_action_finished = False
 
     def run(self, screen):
+        """
+        Funkcja odpowiada za pętlę główną gry.
+        :param screen: płaszczyzna ekranu
+        :return: None
+        """
         while self.running:
             screen.fill((200, 220, 200))
             self.screen = screen
 
             for event in pygame.event.get():
-                self.handle_events(event)
+                self.handle_events(event, screen)
 
             match self.current_state:
                 case GameState.MAIN_MENU.value:
@@ -175,5 +301,7 @@ class GamePlay:
                     self.update_gameplay(screen)
                 case GameState.PERSONALIZE_MENU.value:
                     self.menu.personalize_game_menu(screen)
+
+
 
             pygame.display.flip()

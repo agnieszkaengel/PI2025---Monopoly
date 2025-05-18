@@ -12,6 +12,9 @@ class Player:
         self.tile_index = idx
         self.owned_tiles = []
         self.player_menu = PlayerMenu(dim)
+        self.in_prison = False
+        self.in_parking = False
+        self.waiting_count = 0
 
     def add_owned_tile(self, tile:Tile):
         self.owned_tiles.append(tile)

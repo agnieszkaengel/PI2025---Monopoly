@@ -117,6 +117,7 @@ class BoardService:
 
 
 
+
             self.pending_move = False
             return True
         return False
@@ -148,3 +149,9 @@ class BoardService:
                 case 3:
                     player.player_menu.draw_player_menu(screen, player.name, player.money, x + self.dim.board_width + self.dim.player_menu_width + (self.dim.screen_width-self.dim.board_width)//2 * 0.05 * 2.5, y + (self.dim.screen_height-self.dim.player_menu_height)*0.95)
 
+
+    def move_to_prison(self, idx):
+        prison_x = 409.355
+        prison_y = 59.355
+        self.players[idx].position = (prison_x, prison_y)
+        self.players[idx].tile_index = 10

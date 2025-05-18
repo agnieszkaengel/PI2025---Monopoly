@@ -25,6 +25,14 @@ class TileService:
     def draw_tile_action(self, tile: Tile, screen, player: Player):
             match tile.tile_type:
                 case "Action":
+                    match tile.name:
+                        case "WIEZIENIE":
+                            player.in_prison = True
+                        case "PARKING":
+                            player.in_parking = True
+                        case "IDZ DO WIEZIENIA":
+                            player.in_prison = True
+
                     return False
                 case "Station" | "Street":
                     return self.buying_window(screen, tile, player)
@@ -82,11 +90,14 @@ class TileService:
                 if tile.owner is None and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
-                return True
+                    return True, 0
+                elif tile.owner is not None and player.money >= tile.rent:
+                    player.money -= tile.rent
+                    return True, 1
             elif self.buttons[1].collidepoint(event.pos):
-                return True
+                return True, None
             else:
-                return False
+                return False, None
 
 
     def draw_rent_menu(self, screen, tile, name):
@@ -116,6 +127,7 @@ class TileService:
         screen.blit(text_nie, text_nie_rect)
 
     def handle_buttons2(self, tile, player, event):
+        print("DOATRLEM DO FUNKCJI HANDLE BUTTONS 2")
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.buttons[2].collidepoint(event.pos):
                 if player.money >= tile.rent:
