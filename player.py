@@ -15,6 +15,7 @@ class Player:
         self.in_prison = False
         self.in_parking = False
         self.waiting_count = 0
+        self.is_bankrupt = False
 
     def add_owned_tile(self, tile:Tile):
         self.owned_tiles.append(tile)

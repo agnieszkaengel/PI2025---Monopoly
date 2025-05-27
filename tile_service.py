@@ -87,13 +87,13 @@ class TileService:
     def handle_buttons(self, tile, player, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.buttons[0].collidepoint(event.pos):
-                if tile.owner is None and player.money >= tile.price:
+                if tile.owner is None: #and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
-                    return True, 0
-                elif tile.owner is not None and player.money >= tile.rent:
+                    return True, 0 # 0 - kupowanie nieruchomości
+                elif tile.owner is not None:# and player.money >= tile.rent:
                     player.money -= tile.rent
-                    return True, 1
+                    return True, 1 # 1 - opłata czynszu
             elif self.buttons[1].collidepoint(event.pos):
                 return True, None
             else:
@@ -136,3 +136,31 @@ class TileService:
             elif self.buttons[3].collidepoint(event.pos):
                 return True
         return False
+
+
+    def draw_prison_menu(self, screen, name):
+        pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
+        pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
+        text1 = name + "Czy chcesz wykupić się z więzenia?"
+        text2 = "KOSZT: 50 ZŁ"
+
+        font = pygame.font.SysFont('Arial', int(self.font_size), True)
+        text_color = (0, 0, 0)
+        text1 = font.render(str(text1), True, text_color)
+        text2 = font.render(str(text2), True, text_color)
+        text_rect = text1.get_rect(center=(self.window_place[0] + self.window_size[0]//2, self.window_place[1]+self.window_size[1]*0.1))
+        screen.blit(text1, text_rect)
+        text_rect = text2.get_rect(center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1 + self.font_size*2))
+        screen.blit(text2, text_rect)
+
+
+        pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0]+self.button_size[0]*0.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
+        text_tak = font.render('TAK', True, (0, 0, 0))
+        text_tak_rect = text_tak.get_rect(center=self.buttons[0].center)
+
+        pygame.draw.rect(screen, (200, 100, 100), (self.window_place[0]+self.button_size[0]*1.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
+        text_nie = font.render('NIE', True, (0, 0, 0))
+        text_nie_rect = text_nie.get_rect(center=self.buttons[1].center)
+
+        screen.blit(text_tak, text_tak_rect)
+        screen.blit(text_nie, text_nie_rect)

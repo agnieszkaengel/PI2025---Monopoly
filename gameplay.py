@@ -130,7 +130,7 @@ class GamePlay:
             self.current_state = GameState.PERSONALIZE_MENU.value #okno wyboru liczby graczy, majątku, start_add
 
     def handle_nick_menu_click(self, event):
-        if self.menu.buttons[2].collidepoint(event.pos):
+        if self.menu.buttons[2].collidepoint(event.pos) and self.menu.validate_tokens():
             self.current_state = GameState.GAMEPLAY.value
         else:
             self.check_inbox_click(event)
@@ -141,7 +141,7 @@ class GamePlay:
         :param event: zdarzenie przechwycone w pętli głównej
         :return: None
         """
-        if self.menu.buttons[3].collidepoint(event.pos):
+        if self.menu.buttons[3].collidepoint(event.pos) and self.menu.validate_personalization_inputs():
             self.players_number = int(self.menu.personalize_settings[0])
             self.begin_money = int(self.menu.personalize_settings[1])
             self.board_service.start_add = int(self.menu.personalize_settings[2])
@@ -242,7 +242,7 @@ class GamePlay:
         self.prison_check()
         self.parking_check()
 
-        if self.turn_active:
+        if self.turn_active and not self.players[self.current_player_idx].is_bankrupt:
 
             self.move_made = self.board_service.try_change_pos(self.current_player_idx)
             is_possibility = self.tiles_service.draw_tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx])
@@ -253,7 +253,6 @@ class GamePlay:
             if is_possibility and not self.tile_action_finished: return
             if not is_possibility: self.tile_action_finished = True
 
-            print(self.board_service.board.tiles[self.board_service.list_number].owner, self.players[self.current_player_idx].name, self.tile_action_finished, is_possibility)
             if self.tile_action_finished and not is_possibility and self.board_service.board.tiles[self.board_service.list_number].owner == self.players[self.current_player_idx].name:
                 tile = self.board_service.board.tiles[self.board_service.list_number]
                 color = getattr(tile, "color", (128, 128, 128))
@@ -271,6 +270,16 @@ class GamePlay:
                 else:
                     self.double_rolls = 0
                     self.next_turn()
+
+
+        if self.players_singleton.mark_bankrupt_players() == 1:
+                print("Koniec gry")
+                self.running = False
+
+        elif self.players[self.current_player_idx].is_bankrupt:
+            self.next_turn()
+
+
 
 
     def next_turn(self):

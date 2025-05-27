@@ -18,11 +18,13 @@ class Menu:
         self.users = []
         self.personalize_settings = ['', '', '']
         self.token_errors = [""] * 4
+        self.num = 0
 
     def add_user (self, nick:str, pionek:str):
         self.users.append((nick, pionek))
 
     def create_users_list(self, num):
+        self.num = num
         for i in range(num):
             self.add_user('', '')
 
@@ -165,6 +167,8 @@ class Menu:
                 else:
                     self.users[player] = (self.users[player][0], self.users[player][1] + event.unicode)
 
+
+
     def draw_inbox(self, screen, x, y, text, size):
         pygame.draw.rect(screen, (47, 79, 79), (x, y, self.button_size[0]*size, self.button_size[1]//2))
         pygame.draw.rect(screen, (0, 0, 0), (x, y, self.button_size[0]*size, self.button_size[1]//2), 3)
@@ -201,11 +205,17 @@ class Menu:
         screen.blit(text_surface, (self.personalize_inboxes[0].x + lgr_surface.get_width() * 1.1, self.personalize_inboxes[0].y + 5))  # liczba graczy
 
         text_surface = font.render(self.personalize_settings[1], True, text_color)
-        screen.blit(text_surface, (self.personalize_inboxes[1].x + mgr_surface.get_width() * 1.05, self.personalize_inboxes[1].y + 5))  # liczba graczy
+        screen.blit(text_surface, (self.personalize_inboxes[1].x + mgr_surface.get_width() * 1.05, self.personalize_inboxes[1].y + 5))  # kwota poczatkowa majatku
 
         text_surface = font.render(self.personalize_settings[2], True, text_color)
-        screen.blit(text_surface, (self.personalize_inboxes[2].x + sgr_surface.get_width() * 1.05,self.personalize_inboxes[2].y + 5))  # liczba graczy
+        screen.blit(text_surface, (self.personalize_inboxes[2].x + sgr_surface.get_width() * 1.05,self.personalize_inboxes[2].y + 5))  # kwota przy przejsciu
 
+        if hasattr(self, "input_errors"):
+            font = pygame.font.SysFont('Arial', int(self.text_size * 0.8), True)
+            for i, msg in self.input_errors.items():
+                error_surface = font.render(msg, True, (255, 0, 0))
+                inbox_rect = self.personalize_inboxes[i]
+                screen.blit(error_surface, (inbox_rect.x, inbox_rect.y + inbox_rect.height - 1))
 
     def handle_personalize_settings(self, event, inbox):
         if event.type == pygame.KEYDOWN:
@@ -219,15 +229,63 @@ class Menu:
         chosen = []
         valid = True
 
-        for i in range(len(self.users)):
+        for i in range(self.num):
             token = self.users[i][1]
+            print(f"Checking token at index {i}: '{token}'")
             if not token.isdigit() or not (1 <= int(token) <= 4):
+                print(f"Token '{token}' invalid")
                 self.token_errors[i] = "1–4"
                 valid = False
             elif token in chosen:
+                print(f"Token '{token}' already chosen")
                 self.token_errors[i] = "Zajęty"
                 valid = False
             else:
                 chosen.append(token)
 
         return valid
+
+    def validate_personalization_inputs(self):
+        self.input_errors = {}
+        valid = True
+
+        # Liczba graczy
+        players_input = self.personalize_settings[0]
+        print(f"Checking number of players: '{players_input}'")
+        if not players_input.isdigit():
+            print("Invalid: not a number")
+            self.input_errors[0] = "Musi być liczbą całkowitą"
+            valid = False
+        else:
+            players = int(players_input)
+            if players < 2 or players > 4:
+                print("Invalid: out of range (2–4)")
+                self.input_errors[0] = "Dozwolone 2–4"
+                valid = False
+
+        # Kwota początkowa
+        start_money_input = self.personalize_settings[1]
+        print(f"Checking starting money: '{start_money_input}'")
+        if not start_money_input.isdigit():
+            print("Invalid: not a number")
+            self.input_errors[1] = "Musi być liczbą"
+            valid = False
+        elif int(start_money_input) < 0:
+            print("Invalid: negative number")
+            self.input_errors[1] = "Nie może być ujemna"
+            valid = False
+
+        # Kwota za przejście START
+        pass_start_input = self.personalize_settings[2]
+        print(f"Checking pass start bonus: '{pass_start_input}'")
+        if not pass_start_input.isdigit():
+            print("Invalid: not a number")
+            self.input_errors[2] = "Musi być liczbą"
+            valid = False
+        elif int(pass_start_input) < 0:
+            print("Invalid: negative number")
+            self.input_errors[2] = "Nie może być ujemna"
+            valid = False
+
+        return valid
+
