@@ -32,8 +32,8 @@ class Dice:
             #self.click(screen, x, y, event)
 
     def random_number(self):
-        self.num1 = 5#random.randint(1,6)
-        self.num2 = 5#random.randint(1,6)
+        self.num1 = random.randint(1,6)
+        self.num2 = random.randint(1,6)
 
     def show_dice(self, screen, x, y):
             name1 = str(self.num1) + ".png"

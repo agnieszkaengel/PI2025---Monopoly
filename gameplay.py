@@ -66,7 +66,7 @@ class GamePlay:
         """Flaga oznaczająca czy tura jest aktywna.
                         - True: tura aktywna.
                         - False: tura nieaktywna"""
-        self.tile_action_finished = None
+        self.tile_action_finished = False
         """Flaga oznaczająca czy akcja dotycząca pola, na którym zatrzymał się pionek zostałą zakończona.
                         - True: akcja zakończona
                         - False: akcja niezakończona"""
@@ -201,7 +201,14 @@ class GamePlay:
                         pass
                     case 1:
                         idx = self.players_singleton.get_player_index(self.board_service.board.tiles[self.board_service.list_number].owner)
-                        self.players[idx].money += self.board_service.board.tiles[self.board_service.list_number].rent
+                        if self.board_service.board.tiles[self.board_service.list_number].rent_double:
+                            self.players[idx].money += self.board_service.board.tiles[self.board_service.list_number].rent * 2
+                        else:
+                            self.players[idx].money += self.board_service.board.tiles[self.board_service.list_number].rent
+                    case 2:
+                        self.players[self.current_player_idx].in_prison = False
+                    case None:
+                        self.players[self.current_player_idx].in_prison = True
                 self.tile_action_finished = True
 
 
@@ -239,13 +246,21 @@ class GamePlay:
         self.board_service.start_pos(screen)
         self.board_service.draw_button(screen)
 
-        self.prison_check()
-        self.parking_check()
+        if self.tile_action_finished:
+            self.prison_check()
+            self.parking_check()
 
         if self.turn_active and not self.players[self.current_player_idx].is_bankrupt:
 
             self.move_made = self.board_service.try_change_pos(self.current_player_idx)
+            print(self.current_player_idx, self.players[self.current_player_idx].tile_index, self.players[self.current_player_idx].in_prison)
+
+            if self.players[self.current_player_idx].tile_index != 10: self.players[self.current_player_idx].in_prison = False
+            if self.players[self.current_player_idx].tile_index == 10: self.players[self.current_player_idx].in_prison = True
+
+
             is_possibility = self.tiles_service.draw_tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx])
+
 
             if self.players[self.current_player_idx].in_prison and self.players[self.current_player_idx].tile_index != 10:
                 self.board_service.move_to_prison(self.current_player_idx)
@@ -257,6 +272,18 @@ class GamePlay:
                 tile = self.board_service.board.tiles[self.board_service.list_number]
                 color = getattr(tile, "color", (128, 128, 128))
                 self.board_service.players[self.current_player_idx].player_menu.highlight_tile(tile.name, color)
+
+                number = self.board_service.list_number #numer karty na której zatrzymał się ostatni gracz w ruchu
+                tile = self.board_service.board.tiles[number]
+                color = tile.color if hasattr(tile, "color") else None # kolor tej karty jeśli istnieje
+
+                #color = self.board_service.board.tiles[number].color #kolor tej karty
+                if color is not None:
+                    is_complete = self.players[self.current_player_idx].player_menu.check_if_complete(color)
+                    print("PO KUPNIE POLA:", is_complete)
+                    if is_complete: self.board_service.board.double_rent(color)
+
+
 
             if self.tile_action_finished:
                 if self.board_service.dice.is_double():

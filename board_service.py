@@ -113,7 +113,7 @@ class BoardService:
 
 
             tile_type, number = self.board.check_position(self.players[idx].tile_index)
-            self.list_number = number
+            self.list_number = number #numer pola na liście pól w klasie board
 
 
 
@@ -155,3 +155,4 @@ class BoardService:
         prison_y = 59.355
         self.players[idx].position = (prison_x, prison_y)
         self.players[idx].tile_index = 10
+        self.players[idx].in_prison = True

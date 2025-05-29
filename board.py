@@ -97,3 +97,8 @@ class Board:
             i=i+1
         return None
 
+    def double_rent(self, color):
+        for tile in self.tiles:
+            if  hasattr(tile, "color") and tile.color == color:
+                tile.rent_double = True
+

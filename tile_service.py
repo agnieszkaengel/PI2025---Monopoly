@@ -27,13 +27,15 @@ class TileService:
                 case "Action":
                     match tile.name:
                         case "WIEZIENIE":
-                            player.in_prison = True
+                            #player.in_prison = True
+                            return self.buying_window(screen, tile, player)
                         case "PARKING":
                             player.in_parking = True
                         case "IDZ DO WIEZIENIA":
                             player.in_prison = True
+                            return self.buying_window(screen, tile, player)
 
-                    return False
+                    #return False
                 case "Station" | "Street":
                     return self.buying_window(screen, tile, player)
 
@@ -44,17 +46,19 @@ class TileService:
         pass
 
     def buying_window(self, screen, tile, player):
-        if tile.owner is None and not self.buying_finished:
+        if player.in_prison:
+            self.draw_prison_menu(screen, player.name)
+            return True
+        elif tile.owner is None and not self.buying_finished and not player.in_prison:
             self.draw_buy_menu(screen, tile, player.name)
             return True #czy jest mozliwosc akcji - czy czekamy na klikniecie jakiegos przycisku
             #return self.handle_buttons(tile, player, event)
-        elif tile.owner is not None and tile.owner != player.name:
+        elif tile.owner is not None and tile.owner != player.name and not player.in_prison:
             self.draw_rent_menu(screen, tile, player.name)
             #self.handle_buttons2(tile, player, event)
             return True
         else:
             return False
-
 
 
     def draw_buy_menu(self, screen, tile, name):
@@ -87,13 +91,18 @@ class TileService:
     def handle_buttons(self, tile, player, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.buttons[0].collidepoint(event.pos):
-                if tile.owner is None: #and player.money >= tile.price:
+                if tile.name == 'WIEZIENIE' or tile.name == "IDZ DO WIEZIENIA":
+                    player.money -= 50
+                    return True, 2 # 2 - wybór przy wiezieniu
+                elif tile.owner is None: #and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
                     return True, 0 # 0 - kupowanie nieruchomości
                 elif tile.owner is not None:# and player.money >= tile.rent:
-                    player.money -= tile.rent
+                    if tile.rent_double: player.money -= 2*tile.rent
+                    else: player.money -= tile.rent
                     return True, 1 # 1 - opłata czynszu
+
             elif self.buttons[1].collidepoint(event.pos):
                 return True, None
             else:
@@ -104,7 +113,13 @@ class TileService:
         pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
         pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
         text1 = name + "  Musisz opłacić czynsz graczowi: " + tile.owner
-        text2 = "WYSOKOŚĆ CZYNSZU " + str(tile.rent) + " ZŁ"
+
+        if tile.rent_double:
+            rent = tile.rent * 2
+        else:
+            rent = tile.rent
+
+        text2 = "WYSOKOŚĆ CZYNSZU " + str(rent) + " ZŁ"
         font = pygame.font.SysFont('Arial', int(self.font_size), True)
         text_color = (0, 0, 0)
         text1 = font.render(str(text1), True, text_color)

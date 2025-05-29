@@ -103,4 +103,26 @@ class PlayerMenu:
                     tile["color"] = new_color
                     print(f"Zmieniono kolor {tile['name']} na {tile['color']}")
 
+    def find_color_column(self, color):
+        for index, column in enumerate(self.tiles_list):
+            for tile in column:
+                if tile["color"] == color:
+                    return index
+        return None
+
+    def check_if_complete(self, color):
+        index = self.find_color_column(color)
+        if index < 0 or index >= len(self.tiles_list):
+            return False
+
+        column = self.tiles_list[index]
+        for tile in column:
+            if tile["color"] != color:
+                return False
+        return True
+
+
+
+
+
 
