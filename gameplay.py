@@ -253,7 +253,6 @@ class GamePlay:
         if self.turn_active and not self.players[self.current_player_idx].is_bankrupt:
 
             self.move_made = self.board_service.try_change_pos(self.current_player_idx)
-            print(self.current_player_idx, self.players[self.current_player_idx].tile_index, self.players[self.current_player_idx].in_prison)
 
             if self.players[self.current_player_idx].tile_index != 10: self.players[self.current_player_idx].in_prison = False
             if self.players[self.current_player_idx].tile_index == 10: self.players[self.current_player_idx].in_prison = True

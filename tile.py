@@ -104,12 +104,13 @@ class Street(Tile):
 
 
 class Station(Tile):
-    def __init__(self, name, tile_type, width, height, image, price, rent, index, owner):
+    def __init__(self, name, tile_type, width, height, image, price, rent, index, color, owner):
         super().__init__(name, tile_type, width, height, index)
         self.image = image
         self.price = price
         self.rent = rent
         self.owner = owner
+        self.color = color
         #self.image_place = ((0.125*self.width), (0.3*self.height))
 
     def draw(self, screen, x, y, rotation):

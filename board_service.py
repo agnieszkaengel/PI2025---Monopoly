@@ -15,8 +15,6 @@ class BoardService:
         self.pending_move = False
         self.list_number = 0
         self.start_add = 200
-        print(id(self.players_singleton))
-        print(id(self.players))
 
     def start_pos(self, screen):
         for player in self.players:

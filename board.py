@@ -46,13 +46,16 @@ class Board:
                 elif tile_type == "Station":
                     price = tile.get("price")
                     rent = tile.get("rent")
+                    if tile.get("name") == "Elektrownia" or tile.get("name") == "Wodociagi":
+                        color = (255, 255, 153)
+                    else: color = (128,128,128)
                     image = tile.get("image")
                     image = f"images/{image}" if image else None
 
                     if (0 < i < 10) or (19 < i < 29):
-                        station = Station(name, tile_type, self.tile_width, self.tile_height, image, price, rent, index, owner=None)
+                        station = Station(name, tile_type, self.tile_width, self.tile_height, image, price, rent, index, color, owner=None)
                     else:
-                        station = Station(name, tile_type, self.tile_height, self.tile_width, image, price, rent, index, owner=None)
+                        station = Station(name, tile_type, self.tile_height, self.tile_width, image, price, rent, index, color, owner=None)
                     self.tiles.append(station)
 
                 elif tile_type == "Action":

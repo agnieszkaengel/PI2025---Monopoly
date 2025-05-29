@@ -14,7 +14,7 @@ class PlayerMenu:
     def draw_player_menu(self, screen, name, money, x, y):
         pygame.draw.rect(screen, (193, 225, 193), (x, y, self.dim.player_menu_width, self.dim.player_menu_height))
         pygame.draw.rect(screen, (0, 0, 0), (x, y, self.dim.player_menu_width, self.dim.player_menu_height), 3)
-        print(self.dim.player_menu_width, self.dim.player_menu_height)
+
 
         name_rect = pygame.draw.rect(screen, (47, 79, 79), (x+0.02*self.dim.player_menu_width, y+0.02*self.dim.player_menu_height, self.dim.player_menu_width*0.4, self.dim.player_menu_height*0.125))
 

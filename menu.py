@@ -231,13 +231,10 @@ class Menu:
 
         for i in range(self.num):
             token = self.users[i][1]
-            print(f"Checking token at index {i}: '{token}'")
             if not token.isdigit() or not (1 <= int(token) <= 4):
-                print(f"Token '{token}' invalid")
                 self.token_errors[i] = "1–4"
                 valid = False
             elif token in chosen:
-                print(f"Token '{token}' already chosen")
                 self.token_errors[i] = "Zajęty"
                 valid = False
             else:
@@ -251,39 +248,30 @@ class Menu:
 
         # Liczba graczy
         players_input = self.personalize_settings[0]
-        print(f"Checking number of players: '{players_input}'")
         if not players_input.isdigit():
-            print("Invalid: not a number")
             self.input_errors[0] = "Musi być liczbą całkowitą"
             valid = False
         else:
             players = int(players_input)
             if players < 2 or players > 4:
-                print("Invalid: out of range (2–4)")
                 self.input_errors[0] = "Dozwolone 2–4"
                 valid = False
 
         # Kwota początkowa
         start_money_input = self.personalize_settings[1]
-        print(f"Checking starting money: '{start_money_input}'")
         if not start_money_input.isdigit():
-            print("Invalid: not a number")
             self.input_errors[1] = "Musi być liczbą"
             valid = False
         elif int(start_money_input) < 0:
-            print("Invalid: negative number")
             self.input_errors[1] = "Nie może być ujemna"
             valid = False
 
         # Kwota za przejście START
         pass_start_input = self.personalize_settings[2]
-        print(f"Checking pass start bonus: '{pass_start_input}'")
         if not pass_start_input.isdigit():
-            print("Invalid: not a number")
             self.input_errors[2] = "Musi być liczbą"
             valid = False
         elif int(pass_start_input) < 0:
-            print("Invalid: negative number")
             self.input_errors[2] = "Nie może być ujemna"
             valid = False
 
