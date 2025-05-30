@@ -3,6 +3,8 @@ import pygame
 from player import Player
 from dimensions_generator import Dimensions
 from tile import Tile
+import json
+import random
 class TileService:
     def __init__(self, board:Board, dim:Dimensions):
         self.tiles_list = board.tiles
@@ -14,6 +16,11 @@ class TileService:
         self.create_buttons_list()
         self.buying_finished = False
         self.rent_finished = False
+        self.kasa_spol = []
+        self.szansa = []
+        self.card_used = True
+        self.random = None
+        self.load_kasa_and_szansa()
 
 
     def create_buttons_list(self):
@@ -34,6 +41,12 @@ class TileService:
                         case "IDZ DO WIEZIENIA":
                             player.in_prison = True
                             return self.buying_window(screen, tile, player)
+                        case "Kasa Spoleczna":
+                            self.show_card(screen, 0)
+                            return True
+                        case "Szansa":
+                            self.show_card(screen, 1)
+                            return True
 
                     #return False
                 case "Station" | "Street":
@@ -94,6 +107,19 @@ class TileService:
                 if tile.name == 'WIEZIENIE' or tile.name == "IDZ DO WIEZIENIA":
                     player.money -= 50
                     return True, 2 # 2 - wybór przy wiezieniu
+                elif tile.name == 'Kasa Spoleczna':
+                    if self.kasa_spol[self.random]["rodzaj"] == 1:
+                        player.money += int(self.kasa_spol[self.random]["kwota_zysku"])
+                    else:
+                        player.money -= int(self.kasa_spol[self.random]["kwota_straty"])
+
+                    return True, 3 # 3 - wybór przy kasie spolecznej i szansie
+                elif tile.name == 'Szansa':
+                    if self.kasa_spol[self.random]["rodzaj"] == 1:
+                        player.money += int(self.szansa[self.random]["kwota_zysku"])
+                    else:
+                        player.money -= int(self.szansa[self.random]["kwota_straty"])
+                    return True, 3 # 3 - wybór przy kasie spolecznej i szansie
                 elif tile.owner is None: #and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
@@ -141,17 +167,6 @@ class TileService:
         screen.blit(text_tak, text_tak_rect)
         screen.blit(text_nie, text_nie_rect)
 
-    def handle_buttons2(self, tile, player, event):
-        print("DOATRLEM DO FUNKCJI HANDLE BUTTONS 2")
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.buttons[2].collidepoint(event.pos):
-                if player.money >= tile.rent:
-                    player.money -= tile.rent
-                return True
-            elif self.buttons[3].collidepoint(event.pos):
-                return True
-        return False
-
 
     def draw_prison_menu(self, screen, name):
         pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
@@ -179,3 +194,92 @@ class TileService:
 
         screen.blit(text_tak, text_tak_rect)
         screen.blit(text_nie, text_nie_rect)
+
+    def load_kasa_and_szansa(self):
+        with open("karty_kasa_spoleczna.json", "r", encoding="utf-8") as f:
+            tile_data = json.load(f)
+        for tile in tile_data:
+            self.kasa_spol.append({ "rodzaj": tile["rodzaj_karty"], "kwota_zysku": tile["kwota_zysku"], "kwota_straty": tile["kwota_straty"], "tekst": tile["tekst"]})
+
+        with open("karty_szansa.json", "r", encoding="utf-8") as f:
+            tile_data = json.load(f)
+        for tile in tile_data:
+            self.szansa.append({"rodzaj": tile["rodzaj_karty"], "kwota_zysku": tile["kwota_zysku"],"kwota_straty": tile["kwota_straty"], "tekst": tile["tekst"]})
+
+
+    def show_card(self, screen, t):
+        if self.card_used:
+            self.give_random_card(t)
+            self.card_used = False
+
+        if t == 0:
+            text = self.kasa_spol[self.random]["tekst"]
+            typ = self.kasa_spol[self.random]["rodzaj"]
+            self.draw_card(text, "KASA SPOŁECZNA", screen, typ)
+        elif t == 1:
+            text = self.szansa[self.random]["tekst"]
+            typ = self.szansa[self.random]["rodzaj"]
+            self.draw_card(text, "SZANSA", screen, typ)
+
+
+    def give_random_card(self, type):
+        if type == 0: x = len(self.kasa_spol) - 1
+        else: x = len(self.szansa) - 1
+        self.random = random.randint(0, x)
+
+
+    def wypisz_tekst_w_linijkach(self, screen, font, text, text_color, start_x, start_y, font_size, slowa_na_linie=6):
+        slowa = text.split()
+        for i in range(0, len(slowa), slowa_na_linie):
+            linia = ' '.join(slowa[i:i + slowa_na_linie])
+            text_surface = font.render(linia, True, text_color)
+            text_rect = text_surface.get_rect(center=(start_x, start_y + i // slowa_na_linie * int(font_size * 1.5)))
+            screen.blit(text_surface, text_rect)
+
+    def draw_card(self, text, title, screen, typ):
+        pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
+        pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
+
+
+        font = pygame.font.SysFont('Arial', int(self.font_size), True)
+        text_color = (0, 0, 0)
+        self.wypisz_tekst_w_linijkach(
+            screen=screen,
+            font=font,
+            text=str(text),
+            text_color=text_color,
+            start_x=self.window_place[0] + self.window_size[0] // 2,
+            start_y=self.window_place[1] + self.window_size[1] * 0.1 + 2 * int(self.font_size),
+            font_size=self.font_size
+        )
+
+        '''
+        text1 = font.render(str(text), True, text_color)
+        text_rect = text1.get_rect(center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1+2*int(self.font_size)))
+        screen.blit(text1, text_rect)
+        '''
+
+        title1 = font.render(str(title), True, text_color)
+        text_rect = title1.get_rect(center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1))
+        screen.blit(title1, text_rect)
+
+        if typ == 2: #zysk
+            rect = pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
+                self.button_size[0] * 1.4, self.button_size[1]))
+            text_tak = font.render('OPŁAĆ GOTÓWKĄ', True, (0, 0, 0))
+            text_tak_rect = text_tak.get_rect(center=rect.center)
+
+            rect = pygame.draw.rect(screen, (200, 100, 100), (self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6,
+                self.button_size[0] * 1.4, self.button_size[1]))
+            text_nie = font.render('ZASTAW NIERUCHOMOŚĆ', True, (0, 0, 0))
+            text_nie_rect = text_nie.get_rect(center=rect.center)
+
+            screen.blit(text_tak, text_tak_rect)
+            screen.blit(text_nie, text_nie_rect)
+        else:
+            rect = pygame.draw.rect(screen, (120, 180, 120), (
+            self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
+            self.button_size[0] * 1.4, self.button_size[1]))
+            text_tak = font.render('OK', True, (0, 0, 0))
+            text_tak_rect = text_tak.get_rect(center=rect.center)
+            screen.blit(text_tak, text_tak_rect)

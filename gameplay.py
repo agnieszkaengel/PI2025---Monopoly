@@ -209,6 +209,8 @@ class GamePlay:
                         self.players[self.current_player_idx].in_prison = False
                     case None:
                         self.players[self.current_player_idx].in_prison = True
+                    case 3:
+                        self.tiles_service.card_used = True
                 self.tile_action_finished = True
 
 

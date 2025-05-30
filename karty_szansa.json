@@ -1,0 +1,62 @@
+[
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 100,
+    "tekst": "ZA LECZENIE ZAPŁAĆ LEKARZOWI 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 40,
+    "tekst": "ZAPŁAĆ CZESNE - 40 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 200,
+    "kwota_straty": 0,
+    "tekst": "POBIERZ 200 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 200,
+    "kwota_straty": 0,
+    "tekst": "ZWROT PODATKU POBIERZ 200 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 40,
+    "kwota_straty": 0,
+    "tekst": "BANK ZWRACA CI NADPŁATĘ PODATKU POBIERZ 40 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 15,
+    "tekst": "ZAPŁAĆ CZYNSZ WYSOKOŚCI 15 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 50,
+    "tekst": "KOLEJNY RAZ ZOSTAŁEŚ WYBRANY PRZEWODNICZĄCYM RADY NADZORCZEJ - ZAPŁAĆ 80 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 200,
+    "kwota_straty": 0,
+    "tekst": "WYGRAŁEŚ W LOTTO POBIERZ 500ZŁ"
+  },
+  {
+    "rodzaj_karty": 0,
+    "kwota_zysku": 0,
+    "kwota_straty": 0,
+    "tekst": "GONIEC O TRZECH PASACH"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 50,
+    "tekst": "ZROBIONO BŁĄD W TWOICH KORZYŚCIACH KAPITAŁOWYCH ZAPŁAĆ 150 ZŁ"
+  }
+]

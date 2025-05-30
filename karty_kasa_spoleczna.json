@@ -1,0 +1,86 @@
+[
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 100,
+    "tekst": "ZA LECZENIE ZAPŁAĆ LEKARZOWI 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 40,
+    "tekst": "ZAPŁAĆ CZESNE - 40 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 200,
+    "kwota_straty": 0,
+    "tekst": "POBIERZ 200 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 100,
+    "kwota_straty": 0,
+    "tekst": "OTRZYMUJESZ 100 ZŁ Z TYTUŁU UBEZPIECZENIA"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 100,
+    "tekst": "ZA LECZENIE ZĘBÓW U DENTYSTY ZAPŁAĆ 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 0,
+    "kwota_straty": 50,
+    "tekst": "WYJEŻDŻASZ NA WYCIECZKĘ POBIERZ 50 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 50,
+    "kwota_straty": 0,
+    "tekst": "ODZIEDZICZYŁEŚ SPADEK, POBIERZ 50 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 100,
+    "kwota_straty": 0,
+    "tekst": "WYGRAŁEŚ NA LOTERII, POBIERZ 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 40,
+    "tekst": "ZAJĄŁEŚ DRUGIE MIEJSCE W KONKURSIE PIĘKNOŚCI POBIERZ 40 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 115,
+    "tekst": "ELEKTRYK WZYWA CIĘ DO NAPRAWY INSTALACJI NEONOWEJ, ZAPŁAĆ 115 ZŁ ZA ROBOTĘ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 100,
+    "kwota_straty": 0,
+    "tekst": "ZROBIŁEŚ POST VIRAL, POBIERZ 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 100,
+    "kwota_straty": 0,
+    "tekst": "FUNDUSZ SPOŁECZNY: POBIERZ 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 1,
+    "kwota_zysku": 100,
+    "kwota_straty": 0,
+    "tekst": "DOSTAŁEŚ ZWROT PODATKU: POBIERZ 100 ZŁ"
+  },
+  {
+    "rodzaj_karty": 2,
+    "kwota_zysku": 0,
+    "kwota_straty": 60,
+    "tekst": "MASZ KREDYT W MONOPOLU MUSISZ ODDAĆ 60 ZŁ"
+  }
+]
