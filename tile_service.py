@@ -21,13 +21,21 @@ class TileService:
         self.card_used = True
         self.random = None
         self.load_kasa_and_szansa()
+        self.pledge_input_active = False
+        self.pledge_input_text = ""
+        self.pledge_inbox = pygame.Rect(
+            self.window_place[0]*1.11,
+            self.window_place[1] + self.window_size[1] * 0.3,
+            0.75*self.window_size[0],
+            0.2*self.window_size[1]
+        )
 
 
     def create_buttons_list(self):
         self.buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*0.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
         self.buttons.append(pygame.Rect(self.window_place[0]+self.button_size[0]*1.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
-        self.buttons.append(pygame.Rect((self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.4, self.button_size[1])))
-        self.buttons.append(pygame.Rect((self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.4, self.button_size[1])))
+        #self.buttons.append(pygame.Rect((self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.4, self.button_size[1])))
+        #self.buttons.append(pygame.Rect((self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.4, self.button_size[1])))
 
     def draw_tile_action(self, tile: Tile, screen, player: Player):
             match tile.tile_type:
@@ -104,33 +112,47 @@ class TileService:
     def handle_buttons(self, tile, player, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.buttons[0].collidepoint(event.pos):
+                #if self.pledge_input_active:
+                 #   self.pledge_input_active = False
+                  #  return True, 4 # 4 - zastawienie do banku
+
                 if tile.name == 'WIEZIENIE' or tile.name == "IDZ DO WIEZIENIA":
                     player.money -= 50
                     return True, 2 # 2 - wybór przy wiezieniu
+
                 elif tile.name == 'Kasa Spoleczna':
                     if self.kasa_spol[self.random]["rodzaj"] == 1:
                         player.money += int(self.kasa_spol[self.random]["kwota_zysku"])
                     else:
                         player.money -= int(self.kasa_spol[self.random]["kwota_straty"])
-
                     return True, 3 # 3 - wybór przy kasie spolecznej i szansie
+
                 elif tile.name == 'Szansa':
                     if self.kasa_spol[self.random]["rodzaj"] == 1:
                         player.money += int(self.szansa[self.random]["kwota_zysku"])
                     else:
                         player.money -= int(self.szansa[self.random]["kwota_straty"])
                     return True, 3 # 3 - wybór przy kasie spolecznej i szansie
+
                 elif tile.owner is None: #and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
                     return True, 0 # 0 - kupowanie nieruchomości
                 elif tile.owner is not None:# and player.money >= tile.rent:
-                    if tile.rent_double: player.money -= 2*tile.rent
-                    else: player.money -= tile.rent
+                    if tile.rent_double:
+                        player.money -= 2*tile.rent
+                    else:
+                        player.money -= tile.rent
                     return True, 1 # 1 - opłata czynszu
 
             elif self.buttons[1].collidepoint(event.pos):
-                return True, None
+                if tile.name == 'WIEZIENIE':
+                    return True, 5
+                #elif tile.owner is not None:
+                #    return True, 4
+                else:
+                    self.pledge_input_active = False
+                    return True, 0
             else:
                 return False, None
 
@@ -283,3 +305,58 @@ class TileService:
             text_tak = font.render('OK', True, (0, 0, 0))
             text_tak_rect = text_tak.get_rect(center=rect.center)
             screen.blit(text_tak, text_tak_rect)
+
+    def draw_pledge_menu(self, screen):
+        pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
+        pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
+
+        font = pygame.font.SysFont('Arial', int(self.font_size), True)
+        text_color = (0, 0, 0)
+
+        title1 = font.render(str("ZASTAWIENIE NIERUCHOMOŚCI"), True, text_color)
+        text_rect = title1.get_rect(center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1))
+        screen.blit(title1, text_rect)
+
+        pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
+                self.button_size[0] * 2, self.button_size[1]/2))
+        pygame.draw.rect(screen,(0,0,0), (self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
+                self.button_size[0] * 2, self.button_size[1]/2), 3)
+
+        text1 = font.render(str("Podaj nazwę nieruchomości do zastawienia:"), True, text_color)
+        text_rect = text1.get_rect(
+            center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1+int(self.font_size)))
+        screen.blit(text1, text_rect)
+
+        # Pole tekstowe
+        box_color = (255, 255, 255) if self.pledge_input_active else (200, 200, 200)
+        pygame.draw.rect(screen, box_color, self.pledge_inbox, 0)
+        pygame.draw.rect(screen, (0, 0, 0), self.pledge_inbox, 2)
+
+        # Wpisany tekst
+        input_surface = font.render(self.pledge_input_text, True, (0, 0, 0))
+        screen.blit(input_surface, (self.pledge_inbox.x + 5, self.pledge_inbox.y + 5))
+
+        rect = pygame.draw.rect(screen, (120, 180, 120), (
+        self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
+        self.button_size[0] * 1.4, self.button_size[1]))
+        text_tak = font.render('ZASTAW', True, (0, 0, 0))
+        text_tak_rect = text_tak.get_rect(center=rect.center)
+
+        rect = pygame.draw.rect(screen, (200, 100, 100), (
+        self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6,
+        self.button_size[0] * 1.4, self.button_size[1]))
+        text_nie = font.render('NIE CHCĘ', True, (0, 0, 0))
+        text_nie_rect = text_nie.get_rect(center=rect.center)
+
+        screen.blit(text_tak, text_tak_rect)
+        screen.blit(text_nie, text_nie_rect)
+
+    def click(self, event):
+        print("CLICK")
+        if event.type == pygame.KEYDOWN and self.pledge_input_active:
+            print("KEYDOWN")
+            if event.key == pygame.K_BACKSPACE:
+                self.pledge_input_text = self.pledge_input_text[:-1]
+            else:
+                self.pledge_input_text += event.unicode
+

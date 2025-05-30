@@ -179,6 +179,9 @@ class GamePlay:
         elif self.current_state == GameState.PERSONALIZE_MENU.value:
             if self.choice_inbox_active is not None:
                 self.menu.handle_personalize_settings(event, self.choice_inbox_active)
+        elif self.current_state == GameState.GAMEPLAY.value:
+            self.tiles_service.click(event)
+
 
     def handle_gameplay_click(self, event):
         """
@@ -193,25 +196,34 @@ class GamePlay:
             self.board_service.dice.update(self.screen, x, y)
             self.board_service.pending_move = True
             self.turn_active = True
+        elif self.tiles_service.pledge_inbox.collidepoint(event.pos):
+            self.tiles_service.pledge_input_active = True
         else:
             handled, flag = self.tiles_service.handle_buttons(self.board_service.board.tiles[self.board_service.list_number], self.players[self.current_player_idx], event)
             if handled:
                 match flag:
                     case 0:
-                        pass
+                        self.tile_action_finished = True
                     case 1:
                         idx = self.players_singleton.get_player_index(self.board_service.board.tiles[self.board_service.list_number].owner)
                         if self.board_service.board.tiles[self.board_service.list_number].rent_double:
                             self.players[idx].money += self.board_service.board.tiles[self.board_service.list_number].rent * 2
                         else:
                             self.players[idx].money += self.board_service.board.tiles[self.board_service.list_number].rent
+                        self.tile_action_finished = True
                     case 2:
                         self.players[self.current_player_idx].in_prison = False
-                    case None:
+                        self.tile_action_finished = True
+                    case 5:
                         self.players[self.current_player_idx].in_prison = True
+                        self.tile_action_finished = True
                     case 3:
                         self.tiles_service.card_used = True
-                self.tile_action_finished = True
+                        self.tile_action_finished = True
+                    case 4:
+                        self.handle_pledge(self.tiles_service.pledge_input_text)
+                #self.tile_action_finished = True
+
 
 
     def prison_check(self):
@@ -232,6 +244,21 @@ class GamePlay:
             self.next_turn()
             return
 
+    def handle_pledge(self, name):
+        had_it = self.players[self.current_player_idx].player_menu.delete_property(name)
+        if not had_it:
+            print("IM HERE")
+            font = pygame.font.SysFont('Arial', int(self.dimensions.font_size))
+            input_surface = font.render("nie posiadasz takiej nieruchomości", True, (0, 0, 0))
+            self.screen.blit(input_surface, (self.tiles_service.pledge_inbox.x + 5, self.tiles_service.pledge_inbox.y * 0.5))
+            self.tiles_service.pledge_input_text = 'nie posiadasz takiej nieruchomości'
+        else:
+            self.tiles_service.pledge_input_text = ''
+
+        price = self.board_service.board.return_card(name)
+        self.players[self.current_player_idx].money += price
+
+
     def update_gameplay(self, screen):
         """
         Funkcja aktualizuje stan rozgrywki przy każdym obrocie pętli głównej.
@@ -248,11 +275,14 @@ class GamePlay:
         self.board_service.start_pos(screen)
         self.board_service.draw_button(screen)
 
+        #if self.players[self.current_player_idx].player_menu.has_anything() and not self.turn_active: self.tiles_service.draw_pledge_menu(self.screen)
+
         if self.tile_action_finished:
             self.prison_check()
             self.parking_check()
 
         if self.turn_active and not self.players[self.current_player_idx].is_bankrupt:
+
 
             self.move_made = self.board_service.try_change_pos(self.current_player_idx)
 
@@ -282,7 +312,7 @@ class GamePlay:
                 if color is not None:
                     is_complete = self.players[self.current_player_idx].player_menu.check_if_complete(color)
                     print("PO KUPNIE POLA:", is_complete)
-                    if is_complete: self.board_service.board.double_rent(color)
+                    if is_complete: self.board_service.board.double_rent(color, True)
 
 
 

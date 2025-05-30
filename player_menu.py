@@ -10,6 +10,7 @@ class PlayerMenu:
         self.tiles_list = [[] for _ in range(10)]
         self.rect_size = (dim.tile_width, dim.tile_height*0.25)
         self.load_tiles_list()
+        self.auction_inbox = None
 
     def draw_player_menu(self, screen, name, money, x, y):
         pygame.draw.rect(screen, (193, 225, 193), (x, y, self.dim.player_menu_width, self.dim.player_menu_height))
@@ -122,7 +123,20 @@ class PlayerMenu:
         return True
 
 
+    def delete_property(self, name):
+        for index, column in enumerate(self.tiles_list):
+            for tile in column:
+                if tile["name"] == name:
+                    tile["color"] = [0,0,0]
+                    return True #jeśli miał taką i została usunięta
+        return False #nie miał takiej
 
+    def has_anything(self):
+        for index, column in enumerate(self.tiles_list):
+            for tile in column:
+                if tile["color"] != [0,0,0]:
+                    return True #jakiekolwiek ma
+        return False #nie ma nic
 
 
 

@@ -100,8 +100,16 @@ class Board:
             i=i+1
         return None
 
-    def double_rent(self, color):
+    def double_rent(self, color, flag):
         for tile in self.tiles:
             if  hasattr(tile, "color") and tile.color == color:
-                tile.rent_double = True
+                tile.rent_double = flag
 
+    def return_card(self, name):
+        for tile in self.tiles:
+            if tile.name == name:
+                tile.owner = None
+                if tile.rent_double:
+                    tile.rent_double = False
+                    self.double_rent(tile.color, False)
+                return tile.price//2
