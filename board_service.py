@@ -153,4 +153,3 @@ class BoardService:
         prison_y = 59.355
         self.players[idx].position = (prison_x, prison_y)
         self.players[idx].tile_index = 10
-        self.players[idx].in_prison = True

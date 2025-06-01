@@ -31,8 +31,8 @@
   },
   {
     "rodzaj_karty": 1,
-    "kwota_zysku": 0,
-    "kwota_straty": 50,
+    "kwota_zysku": 50,
+    "kwota_straty": 0,
     "tekst": "WYJEŻDŻASZ NA WYCIECZKĘ POBIERZ 50 ZŁ"
   },
   {
@@ -48,9 +48,9 @@
     "tekst": "WYGRAŁEŚ NA LOTERII, POBIERZ 100 ZŁ"
   },
   {
-    "rodzaj_karty": 2,
-    "kwota_zysku": 0,
-    "kwota_straty": 40,
+    "rodzaj_karty": 1,
+    "kwota_zysku": 40,
+    "kwota_straty": 0,
     "tekst": "ZAJĄŁEŚ DRUGIE MIEJSCE W KONKURSIE PIĘKNOŚCI POBIERZ 40 ZŁ"
   },
   {

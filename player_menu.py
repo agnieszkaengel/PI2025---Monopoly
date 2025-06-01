@@ -113,7 +113,10 @@ class PlayerMenu:
 
     def check_if_complete(self, color):
         index = self.find_color_column(color)
-        if index < 0 or index >= len(self.tiles_list):
+        if index != None:
+            if index < 0 or index >= len(self.tiles_list):
+                return False
+        else:
             return False
 
         column = self.tiles_list[index]

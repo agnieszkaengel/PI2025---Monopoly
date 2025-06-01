@@ -41,14 +41,17 @@ class TileService:
             match tile.tile_type:
                 case "Action":
                     match tile.name:
-                        case "WIEZIENIE":
+                        #case "WIEZIENIE":
                             #player.in_prison = True
-                            return self.buying_window(screen, tile, player)
-                        case "PARKING":
-                            player.in_parking = True
-                        case "IDZ DO WIEZIENIA":
-                            player.in_prison = True
-                            return self.buying_window(screen, tile, player)
+                            #return True
+                            #return self.buying_window(screen, tile, player)
+                        #case "PARKING":
+                            #player.in_parking = True
+                            #return True
+                        #case "IDZ DO WIEZIENIA":
+                            #player.in_prison = True
+                            #return True
+                            #return self.buying_window(screen, tile, player)
                         case "Kasa Spoleczna":
                             self.show_card(screen, 0)
                             return True
@@ -56,7 +59,7 @@ class TileService:
                             self.show_card(screen, 1)
                             return True
 
-                    #return False
+                    return False
                 case "Station" | "Street":
                     return self.buying_window(screen, tile, player)
 
@@ -67,10 +70,10 @@ class TileService:
         pass
 
     def buying_window(self, screen, tile, player):
-        if player.in_prison:
-            self.draw_prison_menu(screen, player.name)
-            return True
-        elif tile.owner is None and not self.buying_finished and not player.in_prison:
+        #if player.in_prison:
+            #self.draw_prison_menu(screen, player.name)
+            #return True
+        if tile.owner is None and not self.buying_finished and not player.in_prison:
             self.draw_buy_menu(screen, tile, player.name)
             return True #czy jest mozliwosc akcji - czy czekamy na klikniecie jakiegos przycisku
             #return self.handle_buttons(tile, player, event)
@@ -112,19 +115,21 @@ class TileService:
     def handle_buttons(self, tile, player, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.buttons[0].collidepoint(event.pos):
-                #if self.pledge_input_active:
-                 #   self.pledge_input_active = False
-                  #  return True, 4 # 4 - zastawienie do banku
+                if self.pledge_input_active:
+                   self.pledge_input_active = False
+                   return True, 4 # 4 - zastawienie do banku
 
-                if tile.name == 'WIEZIENIE' or tile.name == "IDZ DO WIEZIENIA":
-                    player.money -= 50
-                    return True, 2 # 2 - wybór przy wiezieniu
+                #elif tile.name == 'WIEZIENIE':
+                    #player.money -= 50
+                    #return True, 2 # 2 - wybór przy wiezieniu
 
                 elif tile.name == 'Kasa Spoleczna':
                     if self.kasa_spol[self.random]["rodzaj"] == 1:
                         player.money += int(self.kasa_spol[self.random]["kwota_zysku"])
                     else:
                         player.money -= int(self.kasa_spol[self.random]["kwota_straty"])
+
+                    if player.money < 0: player.money = 0
                     return True, 3 # 3 - wybór przy kasie spolecznej i szansie
 
                 elif tile.name == 'Szansa':
@@ -132,29 +137,36 @@ class TileService:
                         player.money += int(self.szansa[self.random]["kwota_zysku"])
                     else:
                         player.money -= int(self.szansa[self.random]["kwota_straty"])
+
+                    if player.money < 0: player.money = 0
                     return True, 3 # 3 - wybór przy kasie spolecznej i szansie
 
                 elif tile.owner is None: #and player.money >= tile.price:
                     tile.owner = player.name
                     player.money -= tile.price
+                    if player.money < 0: player.money = 0
                     return True, 0 # 0 - kupowanie nieruchomości
                 elif tile.owner is not None:# and player.money >= tile.rent:
                     if tile.rent_double:
                         player.money -= 2*tile.rent
                     else:
                         player.money -= tile.rent
+                    if player.money < 0: player.money = 0
                     return True, 1 # 1 - opłata czynszu
+                else:
+                    return True, 0
 
             elif self.buttons[1].collidepoint(event.pos):
-                if tile.name == 'WIEZIENIE':
-                    return True, 5
+                #if tile.name == 'WIEZIENIE':
+                #    return True, 5
                 #elif tile.owner is not None:
-                #    return True, 4
-                else:
-                    self.pledge_input_active = False
-                    return True, 0
+                 #   return True, 6
+                #else:
+                return True, 0
+
             else:
-                return False, None
+                return True, 0
+
 
 
     def draw_rent_menu(self, screen, tile, name):
@@ -181,13 +193,16 @@ class TileService:
         text_tak = font.render('OPŁAĆ GOTÓWKĄ', True, (0, 0, 0))
         text_tak_rect = text_tak.get_rect(center=rect.center)
 
+        '''
         rect = pygame.draw.rect(screen, (200, 100, 100), (
         self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6, self.button_size[0]*1.4, self.button_size[1]))
         text_nie = font.render('ZASTAW NIERUCHOMOŚĆ', True, (0, 0, 0))
         text_nie_rect = text_nie.get_rect(center=rect.center)
+        screen.blit(text_nie, text_nie_rect)
+        '''
 
         screen.blit(text_tak, text_tak_rect)
-        screen.blit(text_nie, text_nie_rect)
+
 
 
     def draw_prison_menu(self, screen, name):
@@ -209,13 +224,14 @@ class TileService:
         pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0]+self.button_size[0]*0.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
         text_tak = font.render('TAK', True, (0, 0, 0))
         text_tak_rect = text_tak.get_rect(center=self.buttons[0].center)
-
+        '''
         pygame.draw.rect(screen, (200, 100, 100), (self.window_place[0]+self.button_size[0]*1.5, self.window_place[1]+self.window_size[1]*0.6, self.button_size[0], self.button_size[1]))
         text_nie = font.render('NIE', True, (0, 0, 0))
         text_nie_rect = text_nie.get_rect(center=self.buttons[1].center)
-
-        screen.blit(text_tak, text_tak_rect)
         screen.blit(text_nie, text_nie_rect)
+        '''
+        screen.blit(text_tak, text_tak_rect)
+
 
     def load_kasa_and_szansa(self):
         with open("karty_kasa_spoleczna.json", "r", encoding="utf-8") as f:
@@ -245,8 +261,8 @@ class TileService:
 
 
     def give_random_card(self, type):
-        if type == 0: x = len(self.kasa_spol) - 1
-        else: x = len(self.szansa) - 1
+        if type == 0: x = 13
+        else: x = 9
         self.random = random.randint(0, x)
 
 
@@ -291,13 +307,16 @@ class TileService:
             text_tak = font.render('OPŁAĆ GOTÓWKĄ', True, (0, 0, 0))
             text_tak_rect = text_tak.get_rect(center=rect.center)
 
+            '''
             rect = pygame.draw.rect(screen, (200, 100, 100), (self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6,
                 self.button_size[0] * 1.4, self.button_size[1]))
             text_nie = font.render('ZASTAW NIERUCHOMOŚĆ', True, (0, 0, 0))
             text_nie_rect = text_nie.get_rect(center=rect.center)
+            screen.blit(text_nie, text_nie_rect)
+            '''
 
             screen.blit(text_tak, text_tak_rect)
-            screen.blit(text_nie, text_nie_rect)
+
         else:
             rect = pygame.draw.rect(screen, (120, 180, 120), (
             self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
@@ -306,21 +325,16 @@ class TileService:
             text_tak_rect = text_tak.get_rect(center=rect.center)
             screen.blit(text_tak, text_tak_rect)
 
-    def draw_pledge_menu(self, screen):
+    def draw_pledge_menu(self, screen, name):
         pygame.draw.rect(screen, (193, 225, 193),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
         pygame.draw.rect(screen, (0, 0, 0),(self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),2)
 
         font = pygame.font.SysFont('Arial', int(self.font_size), True)
         text_color = (0, 0, 0)
 
-        title1 = font.render(str("ZASTAWIENIE NIERUCHOMOŚCI"), True, text_color)
+        title1 = font.render(str(name) + str(": ZASTAWIENIE NIERUCHOMOŚCI"), True, text_color)
         text_rect = title1.get_rect(center=(self.window_place[0] + self.window_size[0] // 2, self.window_place[1] + self.window_size[1] * 0.1))
         screen.blit(title1, text_rect)
-
-        pygame.draw.rect(screen, (120, 180, 120), (self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
-                self.button_size[0] * 2, self.button_size[1]/2))
-        pygame.draw.rect(screen,(0,0,0), (self.window_place[0] + self.button_size[0] * 0.1, self.window_place[1] + self.window_size[1] * 0.6,
-                self.button_size[0] * 2, self.button_size[1]/2), 3)
 
         text1 = font.render(str("Podaj nazwę nieruchomości do zastawienia:"), True, text_color)
         text_rect = text1.get_rect(
@@ -328,7 +342,7 @@ class TileService:
         screen.blit(text1, text_rect)
 
         # Pole tekstowe
-        box_color = (255, 255, 255) if self.pledge_input_active else (200, 200, 200)
+        box_color = (255, 255, 255) if self.pledge_input_active else (193, 225, 193)
         pygame.draw.rect(screen, box_color, self.pledge_inbox, 0)
         pygame.draw.rect(screen, (0, 0, 0), self.pledge_inbox, 2)
 
@@ -341,15 +355,15 @@ class TileService:
         self.button_size[0] * 1.4, self.button_size[1]))
         text_tak = font.render('ZASTAW', True, (0, 0, 0))
         text_tak_rect = text_tak.get_rect(center=rect.center)
-
+        screen.blit(text_tak, text_tak_rect)
+        '''
         rect = pygame.draw.rect(screen, (200, 100, 100), (
         self.window_place[0] + self.button_size[0] * 1.5, self.window_place[1] + self.window_size[1] * 0.6,
         self.button_size[0] * 1.4, self.button_size[1]))
         text_nie = font.render('NIE CHCĘ', True, (0, 0, 0))
         text_nie_rect = text_nie.get_rect(center=rect.center)
-
-        screen.blit(text_tak, text_tak_rect)
         screen.blit(text_nie, text_nie_rect)
+        '''
 
     def click(self, event):
         print("CLICK")
@@ -359,4 +373,12 @@ class TileService:
                 self.pledge_input_text = self.pledge_input_text[:-1]
             else:
                 self.pledge_input_text += event.unicode
+
+
+    def end_screen(self, screen, name):
+        pygame.draw.rect(screen, (193, 225, 193),
+                         (self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1))
+        pygame.draw.rect(screen, (0, 0, 0),
+                         (self.window_place[0], self.window_place[1], self.window_size[0] - 1, self.window_size[1] - 1),
+                         2)
 

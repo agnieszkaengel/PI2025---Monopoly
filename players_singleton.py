@@ -28,3 +28,7 @@ class PlayersSingleton:
                 active_players += 1
         return active_players
 
+    def find_winner(self):
+        for player in self.players:
+            if player.money > 0:
+                return player.name

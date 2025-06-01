@@ -113,3 +113,27 @@ class Board:
                     tile.rent_double = False
                     self.double_rent(tile.color, False)
                 return tile.price//2
+
+    def return_bankrupts_cards(self, name):
+        for tile in self.tiles:
+            if tile.owner == name:
+                tile.owner = None
+                if tile.rent_double:
+                    tile.rent_double = False
+                    self.double_rent(tile.color, False)
+
+
+
+    def end_screen(self, screen, name):
+        rect = pygame.draw.rect(screen, (193, 225, 193),
+                         (self.board_left_corner[0]+0.5*self.board_width-self.tile_height*2, self.board_left_corner[1]+0.5*self.board_width-self.tile_width, self.tile_height*4, self.tile_width*2))
+        pygame.draw.rect(screen, (0, 0, 0),
+                         (self.board_left_corner[0]+0.5*self.board_width-self.tile_height*2, self.board_left_corner[1]+0.5*self.board_width-self.tile_width, self.tile_height*4, self.tile_width*2), 2)
+
+        font = pygame.font.SysFont('Arial', 3*int(self.font_size), True)
+        text_color = (0, 0, 0)
+
+        title1 = font.render(str("ZWYCIĘZCA:  " + str(name)), True, text_color)
+        center_x, center_y = rect.center
+        text_rect = title1.get_rect(center=(center_x-3*int(self.font_size), center_y))
+        screen.blit(title1, text_rect)

@@ -14,6 +14,7 @@ class GameState(Enum):
     GAMEPLAY = 2
     PERSONALIZE_MENU = 3
     CUSTOMIZE_PLAYERS = 4
+    STOP = 5
 
 class GamePlay:
     """
@@ -222,27 +223,32 @@ class GamePlay:
                         self.tile_action_finished = True
                     case 4:
                         self.handle_pledge(self.tiles_service.pledge_input_text)
-                #self.tile_action_finished = True
+                        self.tile_action_finished = False
+                    case 6:
+                       self.tiles_service.draw_pledge_menu(self.screen, self.players[self.current_player_idx].name)
+                       self.tile_action_finished = False
 
 
 
     def prison_check(self):
         if self.players[self.current_player_idx].in_prison:
-            self.players[self.current_player_idx].waiting_count += 1
             if self.players[self.current_player_idx].waiting_count >= 3:
                 self.players[self.current_player_idx].in_prison = False
                 self.players[self.current_player_idx].waiting_count = 0
-            self.next_turn()
-            return
+            else:
+                self.players[self.current_player_idx].waiting_count += 1
+                self.next_turn()
+
 
     def parking_check(self):
         if self.players[self.current_player_idx].in_parking:
-            self.players[self.current_player_idx].waiting_count += 1
             if self.players[self.current_player_idx].waiting_count >= 1:
                 self.players[self.current_player_idx].in_parking = False
                 self.players[self.current_player_idx].waiting_count = 0
-            self.next_turn()
-            return
+            else:
+                self.players[self.current_player_idx].waiting_count += 1
+                self.next_turn()
+
 
     def handle_pledge(self, name):
         had_it = self.players[self.current_player_idx].player_menu.delete_property(name)
@@ -254,9 +260,8 @@ class GamePlay:
             self.tiles_service.pledge_input_text = 'nie posiadasz takiej nieruchomości'
         else:
             self.tiles_service.pledge_input_text = ''
-
-        price = self.board_service.board.return_card(name)
-        self.players[self.current_player_idx].money += price
+            price = self.board_service.board.return_card(name)
+            self.players[self.current_player_idx].money += price
 
 
     def update_gameplay(self, screen):
@@ -275,34 +280,35 @@ class GamePlay:
         self.board_service.start_pos(screen)
         self.board_service.draw_button(screen)
 
-        #if self.players[self.current_player_idx].player_menu.has_anything() and not self.turn_active: self.tiles_service.draw_pledge_menu(self.screen)
 
-        if self.tile_action_finished:
-            self.prison_check()
-            self.parking_check()
+        if self.players[self.current_player_idx].player_menu.has_anything() and not self.turn_active and not self.players[self.current_player_idx].in_prison: self.tiles_service.draw_pledge_menu(self.screen, self.players[self.current_player_idx].name)
+
+
+
 
         if self.turn_active and not self.players[self.current_player_idx].is_bankrupt:
 
-
             self.move_made = self.board_service.try_change_pos(self.current_player_idx)
-
-            if self.players[self.current_player_idx].tile_index != 10: self.players[self.current_player_idx].in_prison = False
-            if self.players[self.current_player_idx].tile_index == 10: self.players[self.current_player_idx].in_prison = True
-
-
-            is_possibility = self.tiles_service.draw_tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx])
+            is_possibility = False
+            if not self.tile_action_finished: is_possibility = self.tiles_service.draw_tile_action(self.board_service.board.tiles[self.board_service.list_number], screen, self.players[self.current_player_idx])
 
 
-            if self.players[self.current_player_idx].in_prison and self.players[self.current_player_idx].tile_index != 10:
-                self.board_service.move_to_prison(self.current_player_idx)
+            #if self.players[self.current_player_idx].in_prison and self.players[self.current_player_idx].tile_index != 10:
+                #self.board_service.move_to_prison(self.current_player_idx)
 
+            print(is_possibility, self.tile_action_finished)
             if is_possibility and not self.tile_action_finished: return
+
+            print("JESTEM TU")
             if not is_possibility: self.tile_action_finished = True
 
             if self.tile_action_finished and not is_possibility and self.board_service.board.tiles[self.board_service.list_number].owner == self.players[self.current_player_idx].name:
                 tile = self.board_service.board.tiles[self.board_service.list_number]
                 color = getattr(tile, "color", (128, 128, 128))
-                self.board_service.players[self.current_player_idx].player_menu.highlight_tile(tile.name, color)
+                if self.players[self.current_player_idx].money != 0:
+                    self.board_service.players[self.current_player_idx].player_menu.highlight_tile(tile.name, color)
+                else:
+                    tile.owner = None
 
                 number = self.board_service.list_number #numer karty na której zatrzymał się ostatni gracz w ruchu
                 tile = self.board_service.board.tiles[number]
@@ -318,23 +324,27 @@ class GamePlay:
 
             if self.tile_action_finished:
                 if self.board_service.dice.is_double():
-                    self.tile_action_finished = False
-                    self.turn_active = False
                     self.double_rolls += 1
                     if self.double_rolls < 3:
-                        pass
-                    if self.double_rolls == 3:
-                        self.board_service.move_to_prison(self.current_player_idx)
+                        self.turn_active = False
+                        self.tile_action_finished = False
+                    elif self.double_rolls == 3:
+                        #self.board_service.move_to_prison(self.current_player_idx)
+                        #self.players[self.current_player_idx].in_prison = True
+                        self.double_rolls = 0
+                        self.next_turn()
                 else:
                     self.double_rolls = 0
                     self.next_turn()
 
 
+
+
         if self.players_singleton.mark_bankrupt_players() == 1:
-                print("Koniec gry")
-                self.running = False
+            self.current_state = GameState.STOP.value
 
         elif self.players[self.current_player_idx].is_bankrupt:
+            self.board_service.board.return_bankrupts_cards(self.players[self.current_player_idx].name)
             self.next_turn()
 
 
@@ -368,6 +378,9 @@ class GamePlay:
                     self.update_gameplay(screen)
                 case GameState.PERSONALIZE_MENU.value:
                     self.menu.personalize_game_menu(screen)
+                case GameState.STOP.value:
+                    name = self.players_singleton.find_winner()
+                    self.board_service.board.end_screen(screen, name)
 
 
 

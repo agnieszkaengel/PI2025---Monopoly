@@ -38,7 +38,7 @@
   {
     "rodzaj_karty": 2,
     "kwota_zysku": 0,
-    "kwota_straty": 50,
+    "kwota_straty": 80,
     "tekst": "KOLEJNY RAZ ZOSTAŁEŚ WYBRANY PRZEWODNICZĄCYM RADY NADZORCZEJ - ZAPŁAĆ 80 ZŁ"
   },
   {
@@ -56,7 +56,7 @@
   {
     "rodzaj_karty": 2,
     "kwota_zysku": 0,
-    "kwota_straty": 50,
+    "kwota_straty": 150,
     "tekst": "ZROBIONO BŁĄD W TWOICH KORZYŚCIACH KAPITAŁOWYCH ZAPŁAĆ 150 ZŁ"
   }
 ]
